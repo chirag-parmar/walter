@@ -10,6 +10,6 @@ void setup() {
 void loop() {
   long value =  cs_4_2.capacitiveSensorRaw(30);
   Serial.println(value);                  // print sensor output 1
-    
-  delay(10);                             // arbitrary delay to limit data to serial port 
+
+  delay(100);                             // arbitrary delay to limit data to serial port 
 }
