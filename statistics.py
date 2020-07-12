@@ -1,57 +1,40 @@
-import matplotlib.pyplot as plt
 import json
+import numpy as np
+import sys
 
-# Opening JSON file
-f = open('datasets/linear_incremental_filling.json',)
+filter_filling = True
 
-# returns JSON object as
-# a dictionary
-data = json.load(f)
+if len(sys.argv) < 2:
+    print("Usage: python3 statistics.py <path_to_dataset>.json")
+    print("Options: -f include filling=true datapoints")
+    exit()
 
-x = []
-y = []
-level_lines = []
-level_labels = []
-level_sums = {"0": 0, "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0, "8": 0, "9": 0, "10": 0, "11": 0, "12": 0, "13": 0}
-level_counts = {"0": 0, "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0, "8": 0, "9": 0, "10": 0, "11": 0, "12": 0, "13": 0}
+dataset_file = open(sys.argv[1],)
 
-prev_level = data[0]["level"]
-level_lines.append(data[0]["index"])
-level_labels.append(data[0]["level"])
+dataset = json.load(dataset_file)
 
-for datapoint in data:
+#to create a matrix according to the level of water init a dictionary
+dataset_matrix = {}
 
-    if datapoint["filling"] == False:
-        if datapoint["level"] > prev_level:
-            level_lines.append(datapoint["index"])
-            level_labels.append(datapoint["level"])
+for datapoint in dataset:
+    if len(sys.argv)>2 and sys.argv[2] == "-f":
+        pass
+    elif datapoint["filling"] == True:
+        continue
 
-        level_sums[str(datapoint["level"])] = datapoint["val"]
-        level_counts[str(datapoint["level"])] += 1
+    level = int(datapoint["level"])
+    value = int(datapoint["val"])
 
-        prev_level = datapoint["level"]
-        x.append(datapoint["index"])
-        y.append(datapoint["val"])
-
-level_x = []
-average_y = []
-
-for lvl in level_sums:
-    if level_counts[lvl] != 0:
-        level_x.append(lvl)
-        average_y.append(level_sums[lvl])
+    if dataset_matrix.get(level) == None:
+        dataset_matrix[level] = eval(str(level))
+        dataset_matrix[level] = []
 
 
-fig, ax = plt.subplots(2)
+    dataset_matrix[level].append(value)
 
-ax[0].plot(x,y)
-ax[0].vlines(x=level_lines, ymin=0, ymax=data[-1]["index"], linestyles="dotted")
+for lvl in dataset_matrix:
+    mean = np.mean(dataset_matrix[lvl])
+    sd = np.std(dataset_matrix[lvl])
+    print("Level {} -> Mean: {}, SD: {}".format(lvl, mean, sd))
 
-ax[0].set(xlabel='x - Time', ylabel='y - Sensor Value')
 
-ax[1].plot(level_x, average_y, marker='o')
-ax[1].set(xlabel='x - Level', ylabel='y - Avg. Sensor Value')
-
-fig.suptitle('Linear Incremental Filling')
-
-plt.show()
