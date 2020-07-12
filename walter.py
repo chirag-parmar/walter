@@ -2,21 +2,40 @@
 import serial.tools.list_ports
 import serial as sl
 
-ports = serial.tools.list_ports.comports()
-arduino_port = ""
+class Walter:
+    def __init__(self, hwid):
+        self.hwid = hwid
+        self.serial_port = None
+        self.serial_con = None
 
-for port, desc, hwid in sorted(ports):
-    if "1A86:7523" in hwid:
-        arduino_port = port
+    def __str__(self):
+        return "My purpose is to make hooman drink water. Oh my god!"
+
+    def discover(self):
+        ports = serial.tools.list_ports.comports()
+
+        for port, desc, hwid in sorted(ports):
+            if self.hwid in hwid:
+                self.serial_port = port
+                return True
+
+        return False
+
+    def connect(self):
+        if self.serial_port == None:
+            raise Exception("walter not discovered")
+        self.serial_con = sl.Serial(self.serial_port, 9600)
+
+    def read(self):
+        if self.serial_con == None:
+            raise Exception("connection to walter not established")
+        return int(self.serial_con.readline().decode('utf-8').strip())
 
 
-print("[DEBUG]: Found Walter @ \"{}\"".format(arduino_port))
 
-ser = sl.Serial(arduino_port,9600)
 
-print("[DEBUG]: Opened Walter @ \"{}\"".format(arduino_port))
+myWalter = Walter("1A86:7523")
 
-while True:
-    value = ser.readline().decode('utf-8').strip()
-    print("Value: {}".format(value))
-
+if myWalter.discover():
+    myWalter.connect()
+    print(myWalter.read())
