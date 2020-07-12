@@ -5,7 +5,6 @@ import sys
 def moving_average(a, n=3) :
     ret = np.cumsum(a, dtype=float)
     ret[n:] = ret[n:] - ret[:-n]
-    print(ret[0], a[0])
     return ret[n - 1:] / n
 
 if len(sys.argv) < 2:
