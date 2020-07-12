@@ -21,24 +21,30 @@ if myWalter.discover():
     while True:
         datapoint = {"index": datapoint_index, "val": 0, "touch": False, "level": water_level}
 
+        pressed = False
+
+        if keyboard.key_pressed():
+            key = keyboard.read_key()
+            pressed = True
+
         #exit if "x" key is pressed
-        if keyboard.key_pressed() and keyboard.read_key() == "q":
+        if pressed and key == "q":
             print("QUIT")
             with open("datasets/" + dataset_name + ".json", 'w+') as fout:
                 json.dump(dataset, fout)
             break
 
         #if "t" key is pressed then mark the datapoint as a touch datapoint
-        if keyboard.key_pressed() and keyboard.read_key() == "e":
+        if pressed and key == "e":
             datapoint["touch"] = True
 
         #if "w" key is pressed
         #1. Halt recording
         #2. increment water level for subsequent datapoints
         #3. wait for any keypress
-        if keyboard.key_pressed() and keyboard.read_key() == "w":
+        if pressed and key == "w":
             water_level += 1
-
+            print("Incremented water_level = {}. Press any key to continue".format(water_level))
             while not keyboard.key_pressed():
                 continue
 
@@ -46,9 +52,9 @@ if myWalter.discover():
         #1. Halt recording
         #2. increment water level for subsequent datapoints
         #3. wait for any keypress
-        if keyboard.key_pressed() and keyboard.read_key() == "s":
+        if pressed and key == "s":
             water_level -= 1
-
+            print("Decremented water_level = {}. Press any key to continue".format(water_level))
             while not keyboard.key_pressed():
                 continue
 
