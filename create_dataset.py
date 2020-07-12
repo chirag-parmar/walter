@@ -13,6 +13,7 @@ if myWalter.discover():
     dataset_name = input ("Enter dataset name: ")
     water_level = int(input("Enter initial water level: "))
     datapoint_index = 0
+    filling = False
 
     #initialize keyboard recording
     keyboard = Keyboard()
@@ -20,7 +21,7 @@ if myWalter.discover():
     #start dataset creation loop
     while True:
 
-        datapoint = {"index": datapoint_index, "val": 0, "touch": False, "level": water_level}
+        datapoint = {"index": datapoint_index, "val": 0, "touch": False, "level": water_level, "filling": filling}
 
         pressed = False
 
@@ -39,27 +40,20 @@ if myWalter.discover():
         if pressed and key == "e":
             datapoint["touch"] = True
 
-        #if "w" key is pressed
-        #1. Halt recording
-        #2. increment water level for subsequent datapoints
-        #3. wait for any keypress
+        #if "w" key is pressed increment water level
         if pressed and key == "w":
             water_level += 1
-            print("Incremented water_level = {}. Press any key to continue".format(water_level))
-            while not keyboard.key_pressed():
-                pass
-            print("resuming data point logging")
+            print("Level: {}".format(water_level))
 
-        #if "s" key is pressed
-        #1. Halt recording
-        #2. increment water level for subsequent datapoints
-        #3. wait for any keypress
+        #if "s" key is pressed decrement water level
         if pressed and key == "s":
             water_level -= 1
-            print("Decremented water_level = {}. Press any key to continue".format(water_level))
-            while not keyboard.key_pressed():
-                pass
-            print("resuming data point logging")
+            print("Level: {}".format(water_level))
+
+        #if "s" key is pressed decrement water level
+        if pressed and key == "a":
+            filling = not filling
+            print("Filling: {}".format(filling))
 
         #record the sensor value for this datapoint
         datapoint["val"] = myWalter.read()
