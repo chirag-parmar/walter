@@ -19,6 +19,7 @@ if myWalter.discover():
 
     #start dataset creation loop
     while True:
+
         datapoint = {"index": datapoint_index, "val": 0, "touch": False, "level": water_level}
 
         pressed = False
@@ -46,7 +47,8 @@ if myWalter.discover():
             water_level += 1
             print("Incremented water_level = {}. Press any key to continue".format(water_level))
             while not keyboard.key_pressed():
-                continue
+                pass
+            print("resuming data point logging")
 
         #if "s" key is pressed
         #1. Halt recording
@@ -56,7 +58,8 @@ if myWalter.discover():
             water_level -= 1
             print("Decremented water_level = {}. Press any key to continue".format(water_level))
             while not keyboard.key_pressed():
-                continue
+                pass
+            print("resuming data point logging")
 
         #record the sensor value for this datapoint
         datapoint["val"] = myWalter.read()
