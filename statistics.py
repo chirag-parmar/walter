@@ -2,7 +2,11 @@ import json
 import numpy as np
 import sys
 
-filter_filling = True
+def moving_average(a, n=3) :
+    ret = np.cumsum(a, dtype=float)
+    ret[n:] = ret[n:] - ret[:-n]
+    print(ret[0], a[0])
+    return ret[n - 1:] / n
 
 if len(sys.argv) < 2:
     print("Usage: python3 statistics.py <path_to_dataset>.json")
@@ -33,8 +37,13 @@ for datapoint in dataset:
     dataset_matrix[level].append(value)
 
 for lvl in dataset_matrix:
-    mean = np.mean(dataset_matrix[lvl])
-    sd = np.std(dataset_matrix[lvl])
-    print("Level {} -> Mean: {}, SD: {}".format(lvl, mean, sd))
+    if "-m" in sys.argv:
+        mean = np.mean(moving_average(dataset_matrix[lvl], 10))
+        sd = np.std(moving_average(dataset_matrix[lvl], 10))
+        print("Level {} -> Mean: {}, SD: {}".format(lvl, mean, sd))
+    else:
+        mean = np.mean(dataset_matrix[lvl])
+        sd = np.std(dataset_matrix[lvl])
+        print("Level {} -> Mean: {}, SD: {}".format(lvl, mean, sd))
 
 
