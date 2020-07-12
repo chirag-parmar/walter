@@ -30,12 +30,3 @@ class Walter:
         if self.serial_con == None:
             raise Exception("connection to walter not established")
         return int(self.serial_con.readline().decode('utf-8').strip())
-
-
-
-
-myWalter = Walter("1A86:7523")
-
-if myWalter.discover():
-    myWalter.connect()
-    print(myWalter.read())
