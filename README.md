@@ -1,5 +1,27 @@
 ## Walter: The Water Butler
 
+### Quick Setup
+```bash
+virtualenv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Collect datapoints for experimentation
+
+*TODO*
+
+### View statistics
+
+```bash
+python3 statistics.py datasets/<name_of_json_dataset>
+```
+
+Example:
+```bash
+python3 statistics.py datasets/linear_incremental_filling.json
+```
+
 ### Circuit Diagram
 ![walter_circuit](docs/walter_circuit.png)
 
