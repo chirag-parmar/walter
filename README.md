@@ -1,5 +1,12 @@
 ## Walter: The Water Butler
 
+### Circuit Diagram
+![walter_circuit](docs/walter_circuit.png)
+
+### Images
+![walter_arduino_brain](docs/walter_arduino_brain.jpeg)
+![walter_calibration_scale](docs/walter_calibration_scale.jpeg)
+
 #### TODO:
 * [ ] Add License file
 * [ ] README Documentation
