@@ -39,6 +39,7 @@ python3 statistics.py datasets/linear_incremental_filling.json
   * [ ] function for computing the line equation
   * [ ] triggers for interacting with the user
 * [ ] Further Experiments
+  * [x] moving average filter (first tried with pythons scripts (`python3 statistics.py <dataset_path> -m`) and then updated the arduino code `Walter_Filtered`)
   * [ ] Kalman Filtering
   * [ ] Touch sensing datasets
 * [ ] Hardware Improvements
