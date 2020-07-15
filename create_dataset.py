@@ -11,58 +11,36 @@ if myWalter.discover():
     #initialize variables
     dataset = []
     dataset_name = input ("Enter dataset name: ")
-    water_level = int(input("Enter initial water level: "))
     datapoint_index = 0
-    filling = False
-
-    #initialize keyboard recording
-    keyboard = Keyboard()
 
     #start dataset creation loop
     while True:
 
-        datapoint = {"index": datapoint_index, "val": 0, "touch": False, "level": water_level, "filling": filling}
+        user_choice = input("Enter number of datapoints to collect(q/Q - quit): ")
+        num_of_datapoints = 0
 
-        pressed = False
-
-        if keyboard.key_pressed():
-            key = keyboard.read_key()
-            pressed = True
-
-        #exit if "x" key is pressed
-        if pressed and key == "q":
-            print("QUIT")
+        if user_choice == 'q' or user_choice == 'Q':
             with open("datasets/" + dataset_name + ".json", 'w+') as fout:
                 json.dump(dataset, fout)
             break
+        elif user_choice.isnumeric():
+            num_of_datapoints = int(user_choice)
 
-        #if "t" key is pressed then mark the datapoint as a touch datapoint
-        if pressed and key == "e":
-            datapoint["touch"] = True
+        water_level = int(input("Enter the level of water: "))
 
-        #if "w" key is pressed increment water level
-        if pressed and key == "w":
-            water_level += 1
-            print("Level: {}".format(water_level))
+        print("Collecting data points....")
 
-        #if "s" key is pressed decrement water level
-        if pressed and key == "s":
-            water_level -= 1
-            print("Level: {}".format(water_level))
+        for i in range(num_of_datapoints):
+            datapoint = {"index": datapoint_index, "val": 0, "level": water_level}
 
-        #if "s" key is pressed decrement water level
-        if pressed and key == "a":
-            filling = not filling
-            print("Filling: {}".format(filling))
+            #record the sensor value for this datapoint
+            datapoint["val"] = myWalter.read()
 
-        #record the sensor value for this datapoint
-        datapoint["val"] = myWalter.read()
+            #append datapoint into the dataset
+            dataset.append(datapoint)
 
-        #append datapoint into the dataset
-        dataset.append(datapoint)
-
-        #increment index for the next datapoint
-        datapoint_index += 1
+            #increment index for the next datapoint
+            datapoint_index += 1
 
 else:
     print("Couldn't find walter")
