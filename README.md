@@ -18,18 +18,55 @@ The second complexity is that the electrical conductivity of water also has a ro
 
 Therefore, in addition to factoring in a "varying" `d` we would also have to factor in the effect of water as a bad conductor(the electrical conductivity) along with the effect of dielectric constant. One cannot get tangled into the physics of things while playing the role of a hobbyist (one can actually, but one is planning not to. XD). So we just move forward by considering it to be a blackbox and use analytical methods to find the relation between the capacitance and the level of water.
 
-### Quick Setup
+### The Analytics of Walter
+
+#### Quick Setup
 ```bash
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### How to collect datapoints for experimentation?
+#### Collecting Datapoints
+
+```bash
+python3 create_dataset.py
+```
+
+This python script continuously reads the reading coming from the Arduino Nano (sensor value). It creates one datapoint for each value in the format shown below
+
+```json
+{
+  "index": 0,
+  "val": 742,
+  "touch": false,
+  "level": 0,
+  "filling": false
+}
+```
+
+* `index` is automatically incremented for every new datapoint.
+* `val` represents the sensor value.
+* `touch` flags a particular datapoint to the action of touching the sensor (since touching the sensor spikes the capacitance value).
+  * To flag a datapoint as touch you simply have to keep the `e` key pressed while touching the sensor. Once the press is realesed the flag is turned off.
+* `filling` flags a particular datapoint to the action of filling.
+  * one can toggle the `filling` flag for all consecutive datapoints using the `a` key. Therefore all datapoints until the `a` key is pressed again will be marked as filling.
+* `level` marks the level of water for that datapoint.
+  * it can be incremented using the `w` key and decremented using the `s` key
+
+***A not so novel method of collecting datapoints:***
+
+The reasoning behind these flags is that we can only mark a certain number of levels on the water bottle. Since these levels are discrete we need to filter out datapoints created when we our filling the bottle to the next level or emptying it to the below level. This is done using the `filling` flag. Since while filling the bottle we will also be touching the sensor we need to filter out these value as well (unless we want to study or experiment with touch sensing. see later section.). This is done using the `touch` tag. The `level` tag is simply incremented or decremented **before** we turn **off** the `filling` flag. This is to ensure that no datapoint is marked for the wrong level.
+
+A better way to control the datapoints would be to specify when we should collect the datapoints instead of continuously collecting them. Yet to be implemented.
+
+#### Pre-existing datasets
 
 *TODO*
 
-### View statistics
+#### Viewing the data
+
+*TODO*
 
 ```bash
 python3 statistics.py datasets/<name_of_json_dataset>
@@ -51,7 +88,7 @@ python3 statistics.py datasets/linear_incremental_filling.json
 * [x] Add License file
 * [ ] README Documentation
   * [ ] Datasets
-  * [ ] Data extraction process
+  * [x] Data extraction process
   * [ ] Statistics
   * [x] The science of walter
 * [ ] Calibration Sequence
