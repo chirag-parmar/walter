@@ -58,7 +58,7 @@ This python script continuously reads the reading coming from the Arduino Nano (
 
 The reasoning behind these flags is that we can only mark a certain number of levels on the water bottle. Since these levels are discrete we need to filter out datapoints created when we our filling the bottle to the next level or emptying it to the below level. This is done using the `filling` flag. Since while filling the bottle we will also be touching the sensor we need to filter out these value as well (unless we want to study or experiment with touch sensing. see later section.). This is done using the `touch` tag. The `level` tag is simply incremented or decremented **before** we turn **off** the `filling` flag. This is to ensure that no datapoint is marked for the wrong level.
 
-A better way to control the datapoints would be to specify when we should collect the datapoints instead of continuously collecting them. Yet to be implemented.
+> A better way to control the datapoints would be to specify when we should collect the datapoints instead of continuously collecting them. Yet to be implemented.
 
 #### Pre-existing datasets
 
