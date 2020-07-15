@@ -29,59 +29,60 @@ pip install -r requirements.txt
 
 #### Collecting Datapoints
 
+![walter_calibration_scale](docs/walter_calibration_scale.jpg)
+
 ```bash
 python3 create_dataset.py
 ```
 
-This python script continuously reads the reading coming from the Arduino Nano (sensor value). It creates one datapoint for each value in the format shown below
+This python script runs a infinite loop while asking the user two questions in every iteration fo the loop.
+
+1. "Enter number of datapoints to collect(q/Q - quit): " - this is where the user can specify the number of datapoints to be collected or type in `q` or `Q` to quit.
+2. "Enter the level of water: " - The water level entered here will be used for all the datapoints that were specified in the question above.
+
+Each datapoint is stored as JSON string as shown below and each dataset is a `List` of datapoints.
 
 ```json
 {
   "index": 0,
   "val": 742,
-  "touch": false,
   "level": 0,
-  "filling": false
 }
 ```
 
-* `index` is automatically incremented for every new datapoint.
+* `index` (*self-explanatory*)automatically incremented for every new datapoint.
 * `val` represents the sensor value.
-* `touch` flags a particular datapoint to the action of touching the sensor (since touching the sensor spikes the capacitance value).
-  * To flag a datapoint as touch you simply have to keep the `e` key pressed while touching the sensor. Once the press is realesed the flag is turned off.
-* `filling` flags a particular datapoint to the action of filling.
-  * one can toggle the `filling` flag for all consecutive datapoints using the `a` key. Therefore all datapoints until the `a` key is pressed again will be marked as filling.
-* `level` marks the level of water for that datapoint.
-  * it can be incremented using the `w` key and decremented using the `s` key
+* `level` marks the level of water.
 
-***A not so novel method of collecting datapoints:***
+This repository has two pre-existing datasets,
+1. `linear_filling` - datapoints are collected starting from `level 0` and linearly incrementing thereafter upto `level 13`.
+2. `exponential_filling` datapoints are collected starting from `level 0` and exponentially incrementing thereafter upto level 13 i.e. at 0, 1, 2, 4, 8, 13
 
-The reasoning behind these flags is that we can only mark a certain number of levels on the water bottle. Since these levels are discrete we need to filter out datapoints created when we are filling the bottle to the next level or emptying it to the previous level. This is done using the `filling` flag.
-
-![walter_calibration_scale](docs/walter_calibration_scale.jpg)
-
-Since while filling the bottle we will also be touching the sensor we need to filter out these value as well (unless we want to study or experiment with touch sensing. see later section.). This is done using the `touch` flag.
-
-The `level` property is simply incremented or decremented **before** we turn **off** the `filling` flag. This is to ensure that no datapoint is marked for the wrong level.
-
-> A better way to control the datapoints would be to specify when we should collect the datapoints instead of continuously collecting them and flagging them. Yet to be implemented.
-
-#### Pre-existing datasets
-
-*TODO*
-
-#### Viewing the data
-
-*TODO*
+#### Analyzing the data
 
 ```bash
 python3 statistics.py datasets/<name_of_json_dataset>
 ```
 
-Example:
-```bash
-python3 statistics.py datasets/linear_incremental_filling.json
-```
+Linear Filling:
+![linear_filling_plot](docs/linear_filling_plot.png)
+*zoomed in view of `level 6` error bar*
+![linear_filling_error](docs/linear_filling_error.png)
+
+Exponential Filling:
+![exponential_filling_plot](docs/exponential_filling_plot.png)
+*zoomed in view of `level 4` error bar*
+![exponential_filling_error](docs/exponential_filling_error.png)
+
+We can deduce the following conclusions of the experiment
+1. The sensor value is more or less **linearly** dependent on the level of water.
+    * Flattening/breaking of the line after `level 12` of water in the `linear_filling` plot is because level 13 is above the plate area of the capacitor and hence has no or minimal effect on the capacitance.
+2. The error in the values is max at +/- 10. This is **super awesome** considering we had to write only a couple of lines of code and solder one resistor to make the sensor.
+
+Further questions to ponder upon:
+* Is the linear realtionship because of the **uniform** nature of the cylindrical bottle?
+* What if the shape of the bottle is not uniform across the cross section of the plates
+* Since the relationship is linear can we simply collect two datapoints and compute the line equation? (reaping the benefits of continuity of the realtionship)
 
 ### Circuit Diagram
 ![walter_circuit](docs/walter_circuit.png)
@@ -93,10 +94,12 @@ python3 statistics.py datasets/linear_incremental_filling.json
 #### TODO:
 * [x] Add License file
 * [ ] README Documentation
-  * [ ] Datasets
+  * [x] Datasets
   * [x] Data extraction process
-  * [ ] Statistics
+  * [x] Statistics
   * [x] The science of walter
+  * [ ] Adding "Advanced: The filtering of walter" section
+  * [ ] Adding "Advanced: The touchyness of walter" section
 * [ ] Calibration Sequence
   * [ ] function for computing the line equation
   * [ ] triggers for interacting with the user
