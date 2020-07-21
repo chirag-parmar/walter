@@ -11,7 +11,9 @@ def moving_average(a, n=3) :
 
 if len(sys.argv) < 2:
     print("Usage: python3 statistics.py <path_to_dataset>.json")
-    print("Options: -m compute moving average of datapoints corresponding to a level")
+    print("Options:")
+    print("\t -m compute moving average of datapoints corresponding to a level")
+    print("\t --no-error diaply graph without error range")
     exit()
 
 dataset_file = open(sys.argv[1],)
@@ -56,18 +58,28 @@ for lvl in dataset_matrix:
     level_array.append(int(lvl))
 
 #display the graph
-fig = go.Figure(data=go.Scatter(
-        x=level_array,
-        y=mean_array,
-        error_y=dict(
-            type='data',
-            symmetric=False,
-            array=error_array,
-            arrayminus=error_minus_array
-            ),
-        xaxis='x',
-        yaxis='y'
-        ))
+fig = None
+if "--no-error" in sys.argv:
+    fig = go.Figure(data=go.Scatter(
+            x=level_array,
+            y=mean_array,
+            xaxis='x',
+            yaxis='y'
+            ))
+
+else:
+    fig = go.Figure(data=go.Scatter(
+            x=level_array,
+            y=mean_array,
+            error_y=dict(
+                type='data',
+                symmetric=False,
+                array=error_array,
+                arrayminus=error_minus_array
+                ),
+            xaxis='x',
+            yaxis='y'
+            ))
 
 fig.update_xaxes(type="linear")
 fig.update_yaxes(type="linear")
