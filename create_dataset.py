@@ -1,4 +1,3 @@
-from keyboard import Keyboard
 from walter import Walter
 import json
 
