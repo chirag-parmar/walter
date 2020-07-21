@@ -22,10 +22,6 @@ dataset = json.load(dataset_file)
 dataset_matrix = {}
 
 for datapoint in dataset:
-    if len(sys.argv)>2 and sys.argv[2] == "-f":
-        pass
-    elif datapoint["filling"] == True:
-        continue
 
     level = int(datapoint["level"])
     value = int(datapoint["val"])
@@ -77,5 +73,3 @@ fig.update_xaxes(type="linear")
 fig.update_yaxes(type="linear")
 
 fig.show()
-
-
