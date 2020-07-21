@@ -80,9 +80,24 @@ We can deduce the following conclusions of the experiment
 2. The error in the values is max at +/- 10. This is **super awesome** considering we had to write only a couple of lines of code and solder one resistor to make the sensor.
 
 Further questions to ponder upon:
-* Is the linear realtionship because of the **uniform** nature of the cylindrical bottle?
+* Is the linear relationship because of the **uniform** nature of the cylindrical bottle?
 * What if the shape of the bottle is not uniform across the cross section of the plates
 * Since the relationship is linear can we simply collect two datapoints and compute the line equation? (reaping the benefits of continuity of the realtionship)
+
+### The Touch of Walter
+
+The touch sensing of Walter was an accidental discovery but was not surprising because we are using `CapacitiveSensor` library. This library is majorly used for capacitive `touch` sensing.
+
+So when we open up a up the `serial plotter` provided inside the Arduino IDE and connect Walter via a serial connection we notice that:
+1. The sensor value shoots up higher than normal when we touch the bottle.
+2. The touch values are higher when the bottle is grabbed tighter.
+3. The touch values are higher when the bottle is filled up.
+
+![touch_graph](docs/touch_graph.png)
+
+Since the sensor values are *wayyyyyy* higher than normal values we can check for threshold. Whenever the sensor value is greater than this threshold then we can say that the bottle is touched.
+
+For the above graph a practical threshold value would be `5000` since all the peaks cross that mark and our normal maximum value is close to `3000`(full bottle)
 
 ### Circuit Diagram
 ![walter_circuit](docs/walter_circuit.png)
@@ -99,14 +114,14 @@ Further questions to ponder upon:
   * [x] Statistics
   * [x] The science of walter
   * [ ] Adding "Advanced: The filtering of walter" section
-  * [ ] Adding "Advanced: The touchyness of walter" section
+  * [x] Adding "Advanced: The touch of walter" section
 * [ ] Calibration Sequence
   * [ ] function for computing the line equation
   * [ ] triggers for interacting with the user
 * [ ] Further Experiments
   * [x] moving average filter (first tried with pythons scripts (`python3 statistics.py <dataset_path> -m`) and then updated the arduino code `Walter_Filtered`)
   * [ ] Kalman Filtering
-  * [ ] Touch sensing datasets
+  * [x] Touch sensing graphs
 * [ ] Hardware Improvements
   * [ ] 3D printed case
   * [ ] LEDs & Buttons for eliminating interaction via python scripts
