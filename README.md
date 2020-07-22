@@ -24,7 +24,7 @@ Therefore, in addition to factoring in a "varying" `d` we would also have to fac
 ```bash
 virtualenv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 #### Collecting Datapoints
@@ -32,7 +32,7 @@ pip install -r requirements.txt
 ![walter_calibration_scale](docs/walter_calibration_scale.jpg)
 
 ```bash
-python3 create_dataset.py
+python3 scripts/create_dataset.py
 ```
 
 This python script runs a infinite loop while asking the user two questions in every iteration fo the loop.
@@ -61,7 +61,7 @@ This repository has two pre-existing datasets,
 #### Analyzing the data
 
 ```bash
-python3 statistics.py datasets/<name_of_json_dataset>
+python3 scripts/statistics.py datasets/<name_of_json_dataset>
 ```
 
 Linear Filling:
@@ -99,7 +99,34 @@ Since the sensor values are *wayyyyyy* higher than normal values we can check fo
 
 For the above graph a practical threshold value would be `5000` since all the peaks cross that mark and our normal maximum value is close to `3000`(full bottle)
 
-### Circuit Diagram
+### The Hardware of Walter
+
+#### nRF One Time Setup
+*Tested on MACOS*
+
+1. [Download](https://www.nordicsemi.com/Software-and-tools/Software/nRF5-SDK/Download) nRF5 SDK
+2. [Download](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads) ARM GCC toolchain
+4. [Download](https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs) nRF5x Command Line Tools.
+4. Extract nRF5 SDK and rename the extracted folder to `nrf5-sdk`.
+5. Extract GCC ARM toolchain and rename the extracted folder to `arm-toolchain`
+6. Extract `nRF5x Command Line Tools` TAR file.
+  * Navigate inside the nrf ommand line tools folder and install the Jlink package withing it.
+  * Navigate inside the nrf ommand line tools folder and install the `nRF5x Command Line Tools` package withing it.
+7. Check installations
+  * J-Link *(MAC-OS)*: Check if this path exists `/Applications/SEGGER/JLink`
+  * nRF5x Command Line Tools: `nrfjprog -v` must output the version.
+8. Export Environment variables to specifying SDK folder path and ARM toolchain path.
+  * `export SDK_ROOT=<PATH TO nrf5-sdk/ folder>`
+  * `export GNU_INSTALL_ROOT=<PATH TO arm-toolchain/bin/ folder>`
+
+> MAC-OS Complications: The system is going to complain that "the developer cannot be verified" for `arm-none-eabi-gcc`, `cc1`, `as`, `collect2`, `ld`, `liblto_plugin.0.so`, `arm-none-eabi-size`, `arm-none-eabi-objcopy`. Click on `Cancel` and then open Security and Privacy settings and click on `Allow Anyway`. These complains are gonna show one after the another.
+
+#### Burning the software
+```bash
+make flash
+```
+
+#### Circuit Diagram
 ![walter_circuit](docs/walter_circuit.png)
 
 ### Images
