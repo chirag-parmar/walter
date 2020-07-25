@@ -150,8 +150,15 @@ make flash
   * [x] Touch sensing graphs
 * [ ] Hardware Improvements
   * [ ] 3D printed case
-  * [ ] LEDs & Buttons for eliminating interaction via python scripts
+  * [x] [NOT REQUIRED] LEDs & Buttons for eliminating interaction via python scripts
   * [ ] Aluminium or Copper Tape electrodes
   * [ ] Temperature sensor for temperature based calibration
   * [ ] Using NRF52840 Dongle to eliminate communication using python scripts
+      * [x] Port CapcitiveSensor library to nRF
+      * [ ] Remake all the datasets
+      * [ ] Remake all the graphs
+      * [ ] Fabricate the hardware.
   * [ ] Power supply design
+      * [x] Select appropriate battery (Quadcopter LiPo - 150mAh)
+      * [ ] Design charger and regulator ciruit
+      * [ ] Fabricate PCB for charger and regulator circuit
