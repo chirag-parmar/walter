@@ -160,5 +160,5 @@ make flash
       * [ ] Fabricate the hardware.
   * [ ] Power supply design
       * [x] Select appropriate battery (Quadcopter LiPo - 150mAh)
-      * [ ] Design charger and regulator ciruit
+      * [x] Design charger and regulator ciruit - (*NOTE: charger circuit is ripped from the charger that came with the battery*)
       * [ ] Fabricate PCB for charger and regulator circuit
