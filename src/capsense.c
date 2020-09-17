@@ -21,8 +21,8 @@ int sense_one_cycle(sensor_ctx_t *sensor_ctx);
 void initialize_sensor(uint32_t send_pin, uint32_t receive_pin, sensor_ctx_t *sensor_ctx) {
 
 	// initialize this instance's variables
-  sensor_ctx->send_pin = send_pin;
-  sensor_ctx->receive_pin = receive_pin;
+    sensor_ctx->send_pin = send_pin;
+    sensor_ctx->receive_pin = receive_pin;
 
 	sensor_ctx->error = 1;
 	sensor_ctx->loop_timing_factor = 310;		// determined empirically -  a hack
@@ -88,5 +88,5 @@ int sense_one_cycle(sensor_ctx_t *sensor_ctx) {
 		return -2;     // total variable over timeout
 	}
 
-  return 1;
+    return 1;
 }

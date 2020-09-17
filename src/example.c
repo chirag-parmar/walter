@@ -10,7 +10,7 @@
 /**
  * @brief Function for application main entry.
  */
-int main(void)
+int main_example(void)
 {
     //Initialize logging
     ret_code_t err_code = NRF_LOG_INIT(NULL);
