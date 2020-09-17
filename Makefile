@@ -360,7 +360,7 @@ nrf52840_xxaa: ASMFLAGS += -D__STACK_SIZE=8192
 LIB_FILES += -lc -lnosys -lm
 
 
-.PHONY: default help
+.PHONY: default help debug debug-server
 
 # Default target - first one defined
 default: nrf52840_xxaa
@@ -393,6 +393,12 @@ flash_softdevice:
 	@echo Flashing: s140_nrf52_7.0.1_softdevice.hex
 	nrfjprog -f nrf52 --program $(SDK_ROOT)/components/softdevice/s140/hex/s140_nrf52_7.0.1_softdevice.hex --sectorerase
 	nrfjprog -f nrf52 --reset
+
+debug-server:
+	JLinkGDBServerCL -device nrf52840_xxaa -if swd -port 2331
+
+debug:
+	$(GNU_INSTALL_ROOT)/arm-none-eabi-gdb $(OUTPUT_DIRECTORY)/$(TARGETS).out -x debug_cmds.txt
 
 erase:
 	nrfjprog -f nrf52 --eraseall
