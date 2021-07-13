@@ -120,12 +120,33 @@ static void pm_evt_handler(pm_evt_t const * p_evt)
     }
 }
 
+static void walter_timers_start() {
+    ret_code_t err_code;
+    err_code = app_timer_start(m_wlm_timer_id, WLM_TIMER_INTERVAL, NULL);
+    APP_ERROR_CHECK(err_code);
+
+    // err_code = app_timer_start(m_battery_timer_id, BATTERY_TIMER_INTERVAL, NULL);
+    // APP_ERROR_CHECK(err_code);
+}
+
+static void walter_timers_stop() {
+    ret_code_t err_code;
+    err_code = app_timer_stop(m_wlm_timer_id);
+    APP_ERROR_CHECK(err_code);
+
+    // err_code = app_timer_start(m_battery_timer_id);
+    // APP_ERROR_CHECK(err_code);
+}
+
 static long simulated_water_level = 0; 
-static void wlm_timer_timeout_handler(void * p_context)
-{  
-    ble_walter_service_t * p_walter_service = (ble_walter_service_t *)p_context;
-    simulated_water_level += 1;
-    water_level_update(p_walter_service, &simulated_water_level);
+static void wlm_timer_timeout_handler(void * p_context) {  
+
+    if (is_notify_set(&m_walter_service)) {
+        simulated_water_level += 1;
+        water_level_update(&m_walter_service, &simulated_water_level);
+    } else {
+        walter_timers_stop();
+    }
 }
 
 static void timers_init(void)
@@ -270,17 +291,6 @@ static void conn_params_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-static void walter_timers_start(ble_walter_service_t * p_walter_service)
-{
-    ret_code_t err_code;
-    err_code = app_timer_start(m_wlm_timer_id, WLM_TIMER_INTERVAL, p_walter_service);
-    APP_ERROR_CHECK(err_code);
-
-    // ret_code_t err_code;
-    // err_code = app_timer_start(m_battery_timer_id, BATTERY_TIMER_INTERVAL, NULL);
-    // APP_ERROR_CHECK(err_code);
-}
-
 /**@brief Function for putting the chip into sleep mode.
  *
  * @note This function will not return.
@@ -381,6 +391,13 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
             err_code = sd_ble_gap_disconnect(p_ble_evt->evt.gatts_evt.conn_handle,
                                              BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
             APP_ERROR_CHECK(err_code);
+            break;
+
+        case BLE_GATTS_EVT_WRITE:
+            if (p_ble_evt->evt.gatts_evt.params.write.handle == m_walter_service.wlm_handles.cccd_handle &&
+                p_ble_evt->evt.gatts_evt.params.write.data[0] == 0x01) {
+                    walter_timers_start();
+                }
             break;
 
         default:
@@ -630,7 +647,7 @@ int main(void)
 
     // Start execution.
     NRF_LOG_INFO("Walter Started.");
-    walter_timers_start(&m_walter_service);
+    walter_timers_start();
 
     advertising_start(erase_bonds);
 
