@@ -32,6 +32,7 @@
 
 /* Project Includes */
 #include "ble_walter.h"
+#include "wlm_sensor.h"
 
 #define DEVICE_NAME                     "Walter"                                /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME               "Parmar Industries"                     /**< Manufacturer. Will be passed to Device Information Service. */
@@ -138,12 +139,14 @@ static void walter_timers_stop() {
     // APP_ERROR_CHECK(err_code);
 }
 
-static long simulated_water_level = 0; 
-static void wlm_timer_timeout_handler(void * p_context) {  
+static void wlm_timer_timeout_handler(void * p_context) {
+
+    static uint32_t water_level;  
 
     if (is_notify_set(&m_walter_service)) {
-        simulated_water_level += 1;
-        water_level_update(&m_walter_service, &simulated_water_level);
+        water_level = 0;
+        water_level = wlm_sensor_get_reading();
+        water_level_update(&m_walter_service, &water_level);
     } else {
         walter_timers_stop();
     }
@@ -644,6 +647,9 @@ int main(void)
     advertising_init();
     conn_params_init();
     peer_manager_init();
+
+    //intialize the sensor
+    wlm_sensor_init();
 
     // Start execution.
     NRF_LOG_INFO("Walter Started.");

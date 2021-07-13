@@ -53,7 +53,7 @@ long get_sensor_reading(uint8_t samples, sensor_ctx_t *sensor_ctx) {
 }
 
 int sense_one_cycle(sensor_ctx_t *sensor_ctx) {
-    __disable_irq();
+    // __disable_irq();
 	nrf_gpio_pin_clear(sensor_ctx->send_pin);	// sendPin Register low
 	nrf_gpio_cfg_input(sensor_ctx->receive_pin, NRF_GPIO_PIN_NOPULL);	// receivePin to input (pullups are off)
 	nrf_gpio_cfg_output(sensor_ctx->receive_pin); // receivePin to OUTPUT
@@ -61,7 +61,7 @@ int sense_one_cycle(sensor_ctx_t *sensor_ctx) {
 	nrf_delay_us(10);
 	nrf_gpio_cfg_input(sensor_ctx->receive_pin, NRF_GPIO_PIN_NOPULL);	// receivePin to input (pullups are off)
 	nrf_gpio_pin_set(sensor_ctx->send_pin);	// sendPin High
-    __enable_irq();
+    // __enable_irq();
 
 	while ( !nrf_gpio_pin_read(sensor_ctx->receive_pin) && (sensor_ctx->total < sensor_ctx->timeout_millis) ) {  // while receive pin is LOW AND total is positive value
 		sensor_ctx->total++;
@@ -72,13 +72,13 @@ int sense_one_cycle(sensor_ctx_t *sensor_ctx) {
 	}
 
 	// set receive pin HIGH briefly to charge up fully - because the while loop above will exit when pin is ~ 2.5V
-    __disable_irq();
+    // __disable_irq();
 	nrf_gpio_pin_set(sensor_ctx->receive_pin);
 	nrf_gpio_cfg_output(sensor_ctx->receive_pin);  // receivePin to OUTPUT - pin is now HIGH AND OUTPUT
 	nrf_gpio_pin_set(sensor_ctx->receive_pin);
 	nrf_gpio_cfg_input(sensor_ctx->receive_pin, NRF_GPIO_PIN_NOPULL);	// receivePin to INPUT (pullup is off)
 	nrf_gpio_pin_clear(sensor_ctx->send_pin);	// sendPin LOW
-    __enable_irq();
+    // __enable_irq();
 
 	while ( nrf_gpio_pin_read(sensor_ctx->receive_pin) && (sensor_ctx->total < sensor_ctx->timeout_millis) ) {  // while receive pin is HIGH  AND total is less than timeout
 		sensor_ctx->total++;

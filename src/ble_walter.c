@@ -67,7 +67,7 @@ uint32_t ble_walter_service_init(ble_walter_service_t * p_walter_service) {
     return err_code;
 }
 
-uint32_t water_level_update(ble_walter_service_t * p_walter_service, long * wlm_sensor_value) {
+uint32_t water_level_update(ble_walter_service_t * p_walter_service, uint32_t * wlm_sensor_value) {
 
     uint32_t err_code;
 
