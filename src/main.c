@@ -85,7 +85,6 @@
 // ble custom service library
 #include "ble_cus.h"
 
-
 #define DEVICE_NAME                     "Walter"                                /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME               "Parmar Industries"                     /**< Manufacturer. Will be passed to Device Information Service. */
 #define APP_ADV_INTERVAL                300                                     /**< The advertising interval (in units of 0.625 ms. This value corresponds to 187.5 ms). */
@@ -104,8 +103,8 @@
 #define MAX_CONN_PARAMS_UPDATE_COUNT    3                                       /**< Number of attempts before giving up the connection parameter negotiation. */
 
 #define SEC_PARAM_BOND                  1                                       /**< Perform bonding. */
-#define SEC_PARAM_MITM                  0                                       /**< Man In The Middle protection not required. */
-#define SEC_PARAM_LESC                  0                                       /**< LE Secure Connections not enabled. */
+#define SEC_PARAM_MITM                  1                                       /**< Man In The Middle protection not required. */
+#define SEC_PARAM_LESC                  1                                       /**< LE Secure Connections not enabled. */
 #define SEC_PARAM_KEYPRESS              0                                       /**< Keypress notifications not enabled. */
 #define SEC_PARAM_IO_CAPABILITIES       BLE_GAP_IO_CAPS_NONE                    /**< No I/O capabilities. */
 #define SEC_PARAM_OOB                   0                                       /**< Out Of Band data not available. */
@@ -597,8 +596,10 @@ static void advertising_init(void)
     init.advdata.name_type               = BLE_ADVDATA_FULL_NAME;
     init.advdata.include_appearance      = true;
     init.advdata.flags                   = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
-    init.advdata.uuids_complete.uuid_cnt = sizeof(m_adv_uuids) / sizeof(m_adv_uuids[0]);
-    init.advdata.uuids_complete.p_uuids  = m_adv_uuids;
+
+    //Send service uuid information in scan response instead of main advertising packet
+    init.srdata.uuids_complete.uuid_cnt = sizeof(m_adv_uuids) / sizeof(m_adv_uuids[0]);
+    init.srdata.uuids_complete.p_uuids  = m_adv_uuids;
 
     init.config.ble_adv_fast_enabled  = true;
     init.config.ble_adv_fast_interval = APP_ADV_INTERVAL;
