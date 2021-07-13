@@ -162,3 +162,4 @@ make flash
       * [x] Select appropriate battery (Quadcopter LiPo - 150mAh)
       * [x] Design charger and regulator ciruit - (*NOTE: charger circuit is ripped from the charger that came with the battery*)
       * [ ] Fabricate PCB for charger and regulator circuit
+      * [ ] Calculate usage of coin cell batter instead of LiPo

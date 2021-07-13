@@ -30,7 +30,7 @@
                 "${nrfSDK}/components/libraries/uart",
                 "${nrfSDK}/integration/nrfx/legacy",
                 "${nrfSDK}/components/libraries/delay",
-                "${nrfSDK}/modules/nrfx/drivers/include",
+                "${nrfSDK}/modules/nrfx/drivers/include"
             ],
             "defines": [
                 "_DEBUG",
