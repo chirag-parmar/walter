@@ -61,10 +61,14 @@
 
 #define DEAD_BEEF                       0xDEADBEEF                              /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
+// #define BATTERY_TIMER_INTERVAL          APP_TIMER_TICKS(1000)                   // 1000 ms intervals
+#define WLM_TIMER_INTERVAL              APP_TIMER_TICKS(1000)                   // 1000 ms intervals
 
 NRF_BLE_GATT_DEF(m_gatt);                                                       /**< GATT module instance. */
 NRF_BLE_QWR_DEF(m_qwr);                                                         /**< Context for the Queued Write module.*/
 BLE_ADVERTISING_DEF(m_advertising);                                             /**< Advertising module instance. */
+// APP_TIMER_DEF(m_battery_timer_id);                                              /**< Battery timer. */
+APP_TIMER_DEF(m_wlm_timer_id);                                                  /**< water level measurement timer. */
 
 static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;                        /**< Handle of the current connection. */
 
@@ -116,11 +120,14 @@ static void pm_evt_handler(pm_evt_t const * p_evt)
     }
 }
 
+static long simulated_water_level = 0; 
+static void wlm_timer_timeout_handler(void * p_context)
+{  
+    ble_walter_service_t * p_walter_service = (ble_walter_service_t *)p_context;
+    simulated_water_level += 1;
+    water_level_update(p_walter_service, &simulated_water_level);
+}
 
-/**@brief Function for the Timer initialization.
- *
- * @details Initializes the timer module. This creates and starts application timers.
- */
 static void timers_init(void)
 {
     // Initialize timer module.
@@ -129,13 +136,11 @@ static void timers_init(void)
 
     // Create timers.
 
-    /* YOUR_JOB: Create any timers to be used by the application.
-                 Below is an example of how to create a timer.
-                 For every new timer needed, increase the value of the macro APP_TIMER_MAX_TIMERS by
-                 one.
-       ret_code_t err_code;
-       err_code = app_timer_create(&m_app_timer_id, APP_TIMER_MODE_REPEATED, timer_timeout_handler);
-       APP_ERROR_CHECK(err_code); */
+    err_code = app_timer_create(&m_wlm_timer_id, APP_TIMER_MODE_REPEATED, wlm_timer_timeout_handler);
+    APP_ERROR_CHECK(err_code);
+
+    // err_code = app_timer_create(&m_battery_timer_id, APP_TIMER_MODE_REPEATED, battery_timer_timeout_handler);
+    // APP_ERROR_CHECK(err_code); */
 }
 
 
@@ -265,18 +270,16 @@ static void conn_params_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-
-/**@brief Function for starting timers.
- */
-static void application_timers_start(void)
+static void walter_timers_start(ble_walter_service_t * p_walter_service)
 {
-    /* YOUR_JOB: Start your timers. below is an example of how to start a timer.
-       ret_code_t err_code;
-       err_code = app_timer_start(m_app_timer_id, TIMER_INTERVAL, NULL);
-       APP_ERROR_CHECK(err_code); */
+    ret_code_t err_code;
+    err_code = app_timer_start(m_wlm_timer_id, WLM_TIMER_INTERVAL, p_walter_service);
+    APP_ERROR_CHECK(err_code);
 
+    // ret_code_t err_code;
+    // err_code = app_timer_start(m_battery_timer_id, BATTERY_TIMER_INTERVAL, NULL);
+    // APP_ERROR_CHECK(err_code);
 }
-
 
 /**@brief Function for putting the chip into sleep mode.
  *
@@ -410,6 +413,11 @@ static void ble_stack_init(void)
 
     // Register a handler for BLE events.
     NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
+
+    NRF_SDH_BLE_OBSERVER(m_walter_service_observer, 
+                         APP_BLE_OBSERVER_PRIO, 
+                         ble_walter_service_on_ble_evt, 
+                         (void*) &m_walter_service);
 }
 
 
@@ -622,7 +630,7 @@ int main(void)
 
     // Start execution.
     NRF_LOG_INFO("Walter Started.");
-    application_timers_start();
+    walter_timers_start(&m_walter_service);
 
     advertising_start(erase_bonds);
 

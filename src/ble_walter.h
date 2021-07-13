@@ -23,7 +23,7 @@
 struct ble_walter_service_s
 {
     uint16_t                      service_handle;                 /**< Handle of Walter Service (as provided by the BLE stack). */
-    ble_gatts_char_handles_t      wlm_handle;                     /**< Handles related to the Water level measurement Value characteristic. */
+    ble_gatts_char_handles_t      wlm_handles;                     /**< Handles related to the Water level measurement Value characteristic. */
     uint16_t                      conn_handle;                    /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
     uint8_t                       uuid_type;
 };
@@ -34,14 +34,10 @@ typedef struct ble_walter_service_s ble_walter_service_t;
 /**@brief   Macro for defining a ble_cus instance.*/
 #define BLE_WALTER_SERVICE_DEF(_name)  static ble_walter_service_t _name;
 
-/**@brief Function for initializing the Walter Service.
- *
- * @param[out]  p_walter    Walter Service structure. This structure will have to be supplied by
- *                          the application. It will be initialized by this function, and will later
- *                          be used to identify this particular service instance.
- *
- * @return      NRF_SUCCESS on successful initialization of service, otherwise an error code.
- */
+
 uint32_t ble_walter_service_init(ble_walter_service_t * p_walter_service);
+uint32_t water_level_update(ble_walter_service_t * p_walter_service, long * wlm_sensor_value);
+
+void ble_walter_service_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_context);
 
 #endif

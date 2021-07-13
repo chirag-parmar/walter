@@ -31,7 +31,7 @@ uint32_t ble_wlm_char_init(ble_walter_service_t * p_walter_service) {
 
     err_code = characteristic_add(p_walter_service->service_handle, 
                                   &add_char_params, 
-                                  &(p_walter_service->wlm_handle));
+                                  &(p_walter_service->wlm_handles));
 
     return err_code;
 }
@@ -64,4 +64,52 @@ uint32_t ble_walter_service_init(ble_walter_service_t * p_walter_service) {
     err_code = ble_wlm_char_init(p_walter_service);
 
     return err_code;
+}
+
+uint32_t water_level_update(ble_walter_service_t * p_walter_service, long * wlm_sensor_value) {
+
+    uint32_t err_code;
+
+    if (p_walter_service->conn_handle != BLE_CONN_HANDLE_INVALID) {
+        uint16_t               len;
+        uint16_t               hvx_len;
+        ble_gatts_hvx_params_t hvx_params;
+
+        memset(&hvx_params, 0, sizeof(hvx_params));
+
+        len = 4;
+        hvx_len = len;
+
+        hvx_params.handle = p_walter_service->wlm_handles.value_handle;
+        hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
+        hvx_params.offset = 0;
+        hvx_params.p_len  = &hvx_len;
+        hvx_params.p_data = (uint8_t*)wlm_sensor_value;  
+
+        sd_ble_gatts_hvx(p_walter_service->conn_handle, &hvx_params);
+        
+        if ((err_code == NRF_SUCCESS) && (hvx_len != len)) err_code = NRF_ERROR_DATA_SIZE;
+    
+    } else {
+        err_code = NRF_ERROR_INVALID_STATE;
+    }
+
+    return err_code;
+}
+
+void ble_walter_service_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_context) {
+
+    ble_walter_service_t * p_walter_service = (ble_walter_service_t *)p_context;
+
+    switch (p_ble_evt->header.evt_id) {
+        case BLE_GAP_EVT_CONNECTED:
+            p_walter_service->conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+            break;
+        case BLE_GAP_EVT_DISCONNECTED:
+            p_walter_service->conn_handle = BLE_CONN_HANDLE_INVALID;
+            break;
+        default:
+            // No implementation needed.
+            break;
+    }
 }
