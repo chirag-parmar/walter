@@ -38,8 +38,6 @@ typedef struct ble_walter_service_s ble_walter_service_t;
 uint32_t ble_walter_service_init(ble_walter_service_t * p_walter_service);
 uint32_t water_level_update(ble_walter_service_t * p_walter_service, uint32_t * wlm_sensor_value);
 
-bool is_notify_set(ble_walter_service_t * p_walter_service);
-
 void ble_walter_service_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_context);
 
 #endif

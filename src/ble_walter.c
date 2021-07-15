@@ -114,17 +114,3 @@ void ble_walter_service_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_context
             break;
     }
 }
-
-bool is_notify_set(ble_walter_service_t * p_walter_service) {
-
-    ret_code_t err_code;
-
-    // get if the cccd notify value is set
-    ble_gatts_value_t cccd_value;
-    err_code = sd_ble_gatts_value_get(p_walter_service->conn_handle, p_walter_service->wlm_handles.cccd_handle, &cccd_value);
-    APP_ERROR_CHECK(err_code);
-
-    if (*(cccd_value.p_value) & BLE_GATT_HVX_NOTIFICATION) return true;
-
-    return false;
-}

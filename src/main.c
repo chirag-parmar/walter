@@ -121,7 +121,7 @@ static void pm_evt_handler(pm_evt_t const * p_evt)
     }
 }
 
-static void walter_timers_start() {
+static void timers_start() {
     ret_code_t err_code;
     err_code = app_timer_start(m_wlm_timer_id, WLM_TIMER_INTERVAL, NULL);
     APP_ERROR_CHECK(err_code);
@@ -130,12 +130,12 @@ static void walter_timers_start() {
     // APP_ERROR_CHECK(err_code);
 }
 
-static void walter_timers_stop() {
+static void timers_stop() {
     ret_code_t err_code;
     err_code = app_timer_stop(m_wlm_timer_id);
     APP_ERROR_CHECK(err_code);
 
-    // err_code = app_timer_start(m_battery_timer_id);
+    // err_code = app_timer_stop(m_battery_timer_id);
     // APP_ERROR_CHECK(err_code);
 }
 
@@ -143,13 +143,10 @@ static void wlm_timer_timeout_handler(void * p_context) {
 
     static uint32_t water_level;  
 
-    if (is_notify_set(&m_walter_service)) {
-        water_level = 0;
-        water_level = wlm_sensor_get_reading();
-        water_level_update(&m_walter_service, &water_level);
-    } else {
-        walter_timers_stop();
-    }
+    water_level = 0;
+    water_level = wlm_sensor_get_reading();
+    water_level_update(&m_walter_service, &water_level);
+
 }
 
 static void timers_init(void)
@@ -399,8 +396,11 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
         case BLE_GATTS_EVT_WRITE:
             if (p_ble_evt->evt.gatts_evt.params.write.handle == m_walter_service.wlm_handles.cccd_handle &&
                 p_ble_evt->evt.gatts_evt.params.write.data[0] == 0x01) {
-                    walter_timers_start();
-                }
+                    timers_start();
+            } else if (p_ble_evt->evt.gatts_evt.params.write.handle == m_walter_service.wlm_handles.cccd_handle &&
+                       p_ble_evt->evt.gatts_evt.params.write.data[0] != 0x01) {
+                    timers_stop();
+            }
             break;
 
         default:
@@ -653,7 +653,6 @@ int main(void)
 
     // Start execution.
     NRF_LOG_INFO("Walter Started.");
-    walter_timers_start();
 
     advertising_start(erase_bonds);
 
