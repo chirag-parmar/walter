@@ -87,12 +87,12 @@ uint32_t water_level_update(ble_walter_service_t * p_walter_service, uint32_t * 
         hvx_params.p_len  = &hvx_len;
         hvx_params.p_data = (uint8_t*)wlm_sensor_value;  
 
-        sd_ble_gatts_hvx(p_walter_service->conn_handle, &hvx_params);
+        err_code = sd_ble_gatts_hvx(p_walter_service->conn_handle, &hvx_params);
         
         if ((err_code == NRF_SUCCESS) && (hvx_len != len)) err_code = NRF_ERROR_DATA_SIZE;
     
     } else {
-        err_code = NRF_ERROR_INVALID_STATE;
+        err_code = NRF_ERROR_NULL;
     }
 
     return err_code;

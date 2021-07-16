@@ -139,14 +139,18 @@ static void timers_stop() {
     // APP_ERROR_CHECK(err_code);
 }
 
+static uint32_t water_level = 0;
 static void wlm_timer_timeout_handler(void * p_context) {
 
-    static uint32_t water_level;  
+     
 
-    water_level = 0;
-    water_level = wlm_sensor_get_reading();
-    water_level_update(&m_walter_service, &water_level);
+    ret_code_t err_code;
 
+    water_level = (water_level + 1)%100;
+    // water_level = wlm_sensor_get_reading();
+    err_code = water_level_update(&m_walter_service, &water_level);
+
+    if (err_code == NRF_ERROR_INVALID_STATE) timers_stop();
 }
 
 static void timers_init(void)
@@ -358,7 +362,7 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
 
         case BLE_GAP_EVT_CONNECTED:
             NRF_LOG_INFO("Connected.");
-            err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
+            err_code = bsp_indication_set(BSP_INDICATE_USER_STATE_OFF);
             APP_ERROR_CHECK(err_code);
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
             err_code = nrf_ble_qwr_conn_handle_assign(&m_qwr, m_conn_handle);
@@ -655,6 +659,7 @@ int main(void)
     NRF_LOG_INFO("Walter Started.");
 
     advertising_start(erase_bonds);
+    timers_start();
 
     // Enter main loop.
     for (;;)
