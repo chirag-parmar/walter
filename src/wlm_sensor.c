@@ -1,31 +1,38 @@
-/* Copyright (c) 2015 Nordic Semiconductor. All Rights Reserved.
- *
- * The information contained herein is property of Nordic Semiconductor ASA.
- * Terms and conditions of usage are described in detail in NORDIC
- * SEMICONDUCTOR STANDARD SOFTWARE LICENSE AGREEMENT.
- *
- * Licensees are granted free, non-transferable use of the information. NO
- * WARRANTY of ANY KIND is provided. This heading must NOT be removed from
- * the file.
- *
- */
-
-#include <stdbool.h>
-#include <stdint.h>
-#include "nrf_delay.h"
-#include "boards.h"
-#include "capsense.h"
-
-#include "capsense.h"
+#include "nrf_drv_csense.h"
 #include "wlm_sensor.h"
+#include <stdint.h>
 
-static sensor_ctx_t sensor_ctx;
+static uint16_t sensor_value;
 
-void wlm_sensor_init(void) {
-    initialize_sensor(NRF_GPIO_PIN_MAP(1, 15), NRF_GPIO_PIN_MAP(1, 13), &sensor_ctx);                                          
+void csense_handler(nrf_drv_csense_evt_t * p_evt)
+{ 
+    
+    switch(p_evt->analog_channel) {
+        case AIN_7:
+            sensor_value = p_evt->read_value;
+            break;
+        default:
+            break;
+    }
 }
 
-uint32_t wlm_sensor_get_reading(void) {
-    long sensor_value = get_sensor_reading(30, &sensor_ctx);
-    return (uint32_t) sensor_value;
+void wlm_sensor_init(void) {
+    ret_code_t err_code;
+
+    nrf_drv_csense_config_t csense_config = {0};
+    csense_config.output_pin = OUTPUT_PIN;
+
+    err_code = nrf_drv_csense_init(&csense_config, csense_handler);
+    APP_ERROR_CHECK(err_code);
+
+    nrf_drv_csense_channels_enable(AIN_MASK);
+}
+
+uint32_t wlm_sensor_get_reading() {
+    ret_code_t err_code;
+
+    err_code = nrf_drv_csense_sample();
+    APP_ERROR_CHECK(err_code);
+
+    return (uint32_t)sensor_value;
 }

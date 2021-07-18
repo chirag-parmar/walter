@@ -1343,7 +1343,7 @@
 // <e> COMP_ENABLED - nrf_drv_comp - COMP peripheral driver - legacy layer
 //==========================================================
 #ifndef COMP_ENABLED
-#define COMP_ENABLED 0
+#define COMP_ENABLED 1
 #endif
 // <o> COMP_CONFIG_REF  - Reference voltage
 
@@ -1831,7 +1831,7 @@
 // <e> NRFX_COMP_ENABLED - nrfx_comp - COMP peripheral driver
 //==========================================================
 #ifndef NRFX_COMP_ENABLED
-#define NRFX_COMP_ENABLED 0
+#define NRFX_COMP_ENABLED 1
 #endif
 // <o> NRFX_COMP_CONFIG_REF  - Reference voltage
 
@@ -2586,7 +2586,7 @@
 // <e> NRFX_PPI_ENABLED - nrfx_ppi - PPI peripheral allocator
 //==========================================================
 #ifndef NRFX_PPI_ENABLED
-#define NRFX_PPI_ENABLED 0
+#define NRFX_PPI_ENABLED 1
 #endif
 // <e> NRFX_PPI_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
@@ -3388,7 +3388,7 @@
 // <e> NRFX_SAADC_ENABLED - nrfx_saadc - SAADC peripheral driver
 //==========================================================
 #ifndef NRFX_SAADC_ENABLED
-#define NRFX_SAADC_ENABLED 0
+#define NRFX_SAADC_ENABLED 1
 #endif
 // <o> NRFX_SAADC_CONFIG_RESOLUTION  - Resolution
 
@@ -3442,7 +3442,7 @@
 // <e> NRFX_SAADC_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef NRFX_SAADC_CONFIG_LOG_ENABLED
-#define NRFX_SAADC_CONFIG_LOG_ENABLED 0
+#define NRFX_SAADC_CONFIG_LOG_ENABLED 1
 #endif
 // <o> NRFX_SAADC_CONFIG_LOG_LEVEL  - Default Severity level
 
@@ -3932,7 +3932,7 @@
 // <e> NRFX_TIMER_ENABLED - nrfx_timer - TIMER periperal driver
 //==========================================================
 #ifndef NRFX_TIMER_ENABLED
-#define NRFX_TIMER_ENABLED 0
+#define NRFX_TIMER_ENABLED 1
 #endif
 // <q> NRFX_TIMER0_ENABLED  - Enable TIMER0 instance
 
@@ -4959,7 +4959,7 @@
 
 
 #ifndef PPI_ENABLED
-#define PPI_ENABLED 0
+#define PPI_ENABLED 1
 #endif
 
 // <e> PWM_ENABLED - nrf_drv_pwm - PWM peripheral driver - legacy layer
@@ -5427,7 +5427,7 @@
 // <e> SAADC_ENABLED - nrf_drv_saadc - SAADC peripheral driver - legacy layer
 //==========================================================
 #ifndef SAADC_ENABLED
-#define SAADC_ENABLED 0
+#define SAADC_ENABLED 1
 #endif
 // <o> SAADC_CONFIG_RESOLUTION  - Resolution
 
@@ -5640,7 +5640,7 @@
 // <e> TIMER_ENABLED - nrf_drv_timer - TIMER periperal driver - legacy layer
 //==========================================================
 #ifndef TIMER_ENABLED
-#define TIMER_ENABLED 0
+#define TIMER_ENABLED 1
 #endif
 // <o> TIMER_DEFAULT_CONFIG_FREQUENCY  - Timer frequency if in Timer mode
 
@@ -5707,14 +5707,14 @@
 
 
 #ifndef TIMER1_ENABLED
-#define TIMER1_ENABLED 0
+#define TIMER1_ENABLED 1
 #endif
 
 // <q> TIMER2_ENABLED  - Enable TIMER2 instance
 
 
 #ifndef TIMER2_ENABLED
-#define TIMER2_ENABLED 0
+#define TIMER2_ENABLED 1
 #endif
 
 // <q> TIMER3_ENABLED  - Enable TIMER3 instance
@@ -7096,7 +7096,7 @@
 // <e> NRF_CSENSE_ENABLED - nrf_csense - Capacitive sensor module
 //==========================================================
 #ifndef NRF_CSENSE_ENABLED
-#define NRF_CSENSE_ENABLED 0
+#define NRF_CSENSE_ENABLED 1
 #endif
 // <o> NRF_CSENSE_PAD_HYSTERESIS - Minimum value of change required to determine that a pad was touched.
 #ifndef NRF_CSENSE_PAD_HYSTERESIS
@@ -7135,7 +7135,7 @@
 // <e> NRF_DRV_CSENSE_ENABLED - nrf_drv_csense - Capacitive sensor low-level module
 //==========================================================
 #ifndef NRF_DRV_CSENSE_ENABLED
-#define NRF_DRV_CSENSE_ENABLED 0
+#define NRF_DRV_CSENSE_ENABLED 1
 #endif
 // <e> USE_COMP - Use the comparator to implement the capacitive sensor driver.
 
