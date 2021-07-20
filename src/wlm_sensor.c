@@ -1,38 +1,19 @@
-#include "nrf_drv_csense.h"
-#include "wlm_sensor.h"
 #include <stdint.h>
+#include "nrf_gpio.h"
 
-static uint16_t sensor_value;
+#include "capsense.h"
+#include "wlm_sensor.h"
 
-void csense_handler(nrf_drv_csense_evt_t * p_evt)
-{ 
-    
-    switch(p_evt->analog_channel) {
-        case AIN_7:
-            sensor_value = p_evt->read_value;
-            break;
-        default:
-            break;
-    }
-}
+#define NUM_CHANNELS 1
+
+static capsense_channel_t m_capsense_array[NUM_CHANNELS]; 
 
 void wlm_sensor_init(void) {
-    ret_code_t err_code;
-
-    nrf_drv_csense_config_t csense_config = {0};
-    csense_config.output_pin = OUTPUT_PIN;
-
-    err_code = nrf_drv_csense_init(&csense_config, csense_handler);
-    APP_ERROR_CHECK(err_code);
-
-    nrf_drv_csense_channels_enable(AIN_MASK);
+    capsense_config_t capsense_config[] = {{AIN_7, OUTPUT_PIN}};
+    nrf_capsense_init(m_capsense_array, capsense_config, NUM_CHANNELS);                                           
 }
 
-uint32_t wlm_sensor_get_reading() {
-    ret_code_t err_code;
-
-    err_code = nrf_drv_csense_sample();
-    APP_ERROR_CHECK(err_code);
-
-    return (uint32_t)sensor_value;
+uint32_t wlm_sensor_get_reading(void) {
+    nrf_capsense_sample();
+    return m_capsense_array[0].value;
 }

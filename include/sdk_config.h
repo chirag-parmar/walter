@@ -3945,7 +3945,7 @@
 
 
 #ifndef NRFX_TIMER1_ENABLED
-#define NRFX_TIMER1_ENABLED 0
+#define NRFX_TIMER1_ENABLED 1
 #endif
 
 // <q> NRFX_TIMER2_ENABLED  - Enable TIMER2 instance
@@ -7096,7 +7096,7 @@
 // <e> NRF_CSENSE_ENABLED - nrf_csense - Capacitive sensor module
 //==========================================================
 #ifndef NRF_CSENSE_ENABLED
-#define NRF_CSENSE_ENABLED 1
+#define NRF_CSENSE_ENABLED 0
 #endif
 // <o> NRF_CSENSE_PAD_HYSTERESIS - Minimum value of change required to determine that a pad was touched.
 #ifndef NRF_CSENSE_PAD_HYSTERESIS
@@ -7135,7 +7135,7 @@
 // <e> NRF_DRV_CSENSE_ENABLED - nrf_drv_csense - Capacitive sensor low-level module
 //==========================================================
 #ifndef NRF_DRV_CSENSE_ENABLED
-#define NRF_DRV_CSENSE_ENABLED 1
+#define NRF_DRV_CSENSE_ENABLED 0
 #endif
 // <e> USE_COMP - Use the comparator to implement the capacitive sensor driver.
 

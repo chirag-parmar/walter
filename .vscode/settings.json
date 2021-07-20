@@ -2,6 +2,7 @@
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
         "*.sage": "python",
-        "app_error.h": "c"
+        "app_error.h": "c",
+        "nrf_gpio.h": "c"
     }
 }
