@@ -25,7 +25,7 @@ void initialize_sensor(uint32_t send_pin, uint32_t receive_pin, sensor_ctx_t *se
     sensor_ctx->receive_pin = receive_pin;
 
 	sensor_ctx->error = 1;
-	sensor_ctx->loop_timing_factor = 3000;		// determined empirically -  a hack
+	sensor_ctx->loop_timing_factor = 310;		// determined empirically -  a hack
 
 	sensor_ctx->timeout_millis = (2000 * (float)sensor_ctx->loop_timing_factor * (float)F_CPU) / 16000000;
 
