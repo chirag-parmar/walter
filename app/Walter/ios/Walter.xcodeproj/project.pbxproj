@@ -11,9 +11,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		41550148677D9BB0C960D08A /* libPods-Walter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9053CA7100331140DF378953 /* libPods-Walter.a */; };
+		6E3FC249B539C2E9D4ED6AF3 /* libPods-Walter-WalterTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC603BB7A9EA85192B451BAF /* libPods-Walter-WalterTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		85554ED40A8FE7992A6DB5CE /* libPods-Walter-WalterTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2DE02864FE53248EE13EC02 /* libPods-Walter-WalterTests.a */; };
+		FA35B3335A5F43DFDEEC3FE5 /* libPods-Walter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E537C38AEDB770048361C956 /* libPods-Walter.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,19 +30,19 @@
 		00E356EE1AD99517003FC87E /* WalterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WalterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* WalterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WalterTests.m; sourceTree = "<group>"; };
+		0D65657941BC7AA2E2CBBC79 /* Pods-Walter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Walter.release.xcconfig"; path = "Target Support Files/Pods-Walter/Pods-Walter.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Walter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Walter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Walter/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Walter/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Walter/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Walter/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Walter/main.m; sourceTree = "<group>"; };
-		3F0B196D99D0E5BF0E43F736 /* Pods-Walter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Walter.debug.xcconfig"; path = "Target Support Files/Pods-Walter/Pods-Walter.debug.xcconfig"; sourceTree = "<group>"; };
-		7C1CBD5F10FEEFCAF9528B26 /* Pods-Walter-WalterTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Walter-WalterTests.release.xcconfig"; path = "Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests.release.xcconfig"; sourceTree = "<group>"; };
+		2FAE3052AF6FF593689FE0E6 /* Pods-Walter-WalterTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Walter-WalterTests.debug.xcconfig"; path = "Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7F07CB6E7B5FEE922BD0212A /* Pods-Walter-WalterTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Walter-WalterTests.release.xcconfig"; path = "Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Walter/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		84FABFF9856A4BF52F550735 /* Pods-Walter-WalterTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Walter-WalterTests.debug.xcconfig"; path = "Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests.debug.xcconfig"; sourceTree = "<group>"; };
-		87E18CF24446CCA49EF6CD78 /* Pods-Walter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Walter.release.xcconfig"; path = "Target Support Files/Pods-Walter/Pods-Walter.release.xcconfig"; sourceTree = "<group>"; };
-		9053CA7100331140DF378953 /* libPods-Walter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Walter.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E2DE02864FE53248EE13EC02 /* libPods-Walter-WalterTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Walter-WalterTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A45F8526484D555D67434431 /* Pods-Walter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Walter.debug.xcconfig"; path = "Target Support Files/Pods-Walter/Pods-Walter.debug.xcconfig"; sourceTree = "<group>"; };
+		AC603BB7A9EA85192B451BAF /* libPods-Walter-WalterTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Walter-WalterTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E537C38AEDB770048361C956 /* libPods-Walter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Walter.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -51,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85554ED40A8FE7992A6DB5CE /* libPods-Walter-WalterTests.a in Frameworks */,
+				6E3FC249B539C2E9D4ED6AF3 /* libPods-Walter-WalterTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				41550148677D9BB0C960D08A /* libPods-Walter.a in Frameworks */,
+				FA35B3335A5F43DFDEEC3FE5 /* libPods-Walter.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,8 +100,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				9053CA7100331140DF378953 /* libPods-Walter.a */,
-				E2DE02864FE53248EE13EC02 /* libPods-Walter-WalterTests.a */,
+				E537C38AEDB770048361C956 /* libPods-Walter.a */,
+				AC603BB7A9EA85192B451BAF /* libPods-Walter-WalterTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -121,7 +121,7 @@
 				00E356EF1AD99517003FC87E /* WalterTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				C3A899AD2EB882081E19531D /* Pods */,
+				E4945A45FFC28B81B84EBA01 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -137,13 +137,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C3A899AD2EB882081E19531D /* Pods */ = {
+		E4945A45FFC28B81B84EBA01 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3F0B196D99D0E5BF0E43F736 /* Pods-Walter.debug.xcconfig */,
-				87E18CF24446CCA49EF6CD78 /* Pods-Walter.release.xcconfig */,
-				84FABFF9856A4BF52F550735 /* Pods-Walter-WalterTests.debug.xcconfig */,
-				7C1CBD5F10FEEFCAF9528B26 /* Pods-Walter-WalterTests.release.xcconfig */,
+				A45F8526484D555D67434431 /* Pods-Walter.debug.xcconfig */,
+				0D65657941BC7AA2E2CBBC79 /* Pods-Walter.release.xcconfig */,
+				2FAE3052AF6FF593689FE0E6 /* Pods-Walter-WalterTests.debug.xcconfig */,
+				7F07CB6E7B5FEE922BD0212A /* Pods-Walter-WalterTests.release.xcconfig */,
 			);
 			name = Pods;
 			path = Pods;
@@ -156,12 +156,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "WalterTests" */;
 			buildPhases = (
-				58EC2DEA712AB579C5541D6D /* [CP] Check Pods Manifest.lock */,
+				F444844E44DFC509FF8CFECA /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				9629E55BD75B2C97F0F15718 /* [CP] Embed Pods Frameworks */,
-				02E8072B3930B8C616D557B2 /* [CP] Copy Pods Resources */,
+				5C68289B448CEDCD12349737 /* [CP] Embed Pods Frameworks */,
+				325D11CBF3609B97AAC12EC4 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -177,14 +177,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Walter" */;
 			buildPhases = (
-				65651ABE2C5C3EA79635A8AE /* [CP] Check Pods Manifest.lock */,
+				64B635351E9CB44F780AF8A0 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				ABB709857D9F2BEFEDFF030A /* [CP] Embed Pods Frameworks */,
-				61272439EB3526E656641976 /* [CP] Copy Pods Resources */,
+				8E16C11139C0F42BB33C710F /* [CP] Embed Pods Frameworks */,
+				10E7CF3A367D7AC100F3713E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -265,46 +265,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		02E8072B3930B8C616D557B2 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		58EC2DEA712AB579C5541D6D /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Walter-WalterTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		61272439EB3526E656641976 /* [CP] Copy Pods Resources */ = {
+		10E7CF3A367D7AC100F3713E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -321,7 +282,41 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Walter/Pods-Walter-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		65651ABE2C5C3EA79635A8AE /* [CP] Check Pods Manifest.lock */ = {
+		325D11CBF3609B97AAC12EC4 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5C68289B448CEDCD12349737 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		64B635351E9CB44F780AF8A0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -343,24 +338,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9629E55BD75B2C97F0F15718 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Walter-WalterTests/Pods-Walter-WalterTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		ABB709857D9F2BEFEDFF030A /* [CP] Embed Pods Frameworks */ = {
+		8E16C11139C0F42BB33C710F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -375,6 +353,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Walter/Pods-Walter-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F444844E44DFC509FF8CFECA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Walter-WalterTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -429,7 +429,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 84FABFF9856A4BF52F550735 /* Pods-Walter-WalterTests.debug.xcconfig */;
+			baseConfigurationReference = 2FAE3052AF6FF593689FE0E6 /* Pods-Walter-WalterTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -456,7 +456,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7C1CBD5F10FEEFCAF9528B26 /* Pods-Walter-WalterTests.release.xcconfig */;
+			baseConfigurationReference = 7F07CB6E7B5FEE922BD0212A /* Pods-Walter-WalterTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -480,7 +480,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3F0B196D99D0E5BF0E43F736 /* Pods-Walter.debug.xcconfig */;
+			baseConfigurationReference = A45F8526484D555D67434431 /* Pods-Walter.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -506,7 +506,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 87E18CF24446CCA49EF6CD78 /* Pods-Walter.release.xcconfig */;
+			baseConfigurationReference = 0D65657941BC7AA2E2CBBC79 /* Pods-Walter.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
