@@ -7,13 +7,7 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  useColorScheme,
-} from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import { WalterBle } from "./src/components/WalterBleComponent.js"
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
