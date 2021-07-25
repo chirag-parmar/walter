@@ -8,14 +8,14 @@
 
 import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { WalterBle } from "./src/components/WalterBleComponent.js"
+import { BleScreen } from "./src/screens/BleScreen.js"
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const App = () => {
 
   return (
     <SafeAreaView style={styles.sectionContainer}>
-        <WalterBle />
+        <BleScreen />
     </SafeAreaView>
   );
 };
