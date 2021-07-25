@@ -6,20 +6,27 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { BlinkingButton } from "../components/BlinkingButton.js"
 import { WalterBle, WalterBleEvent} from "../interfaces/WalterBle.js"
 
+import { MeasurementScreen } from "./MeasurementScreen.js"
+
 const styles = StyleSheet.create({
-    walterContainer: {
+    container: {
         alignItems: 'center',
         flex: 1,
         justifyContent: 'center'
     },
-    walterText: {
+    instrLabel: {
         paddingTop: 20,
         paddingRight: 5,
         fontSize: 20,
         color: Colors.lighter,
         justifyContent: 'center',
         alignItems: 'center',
-    }
+    },
+    waterLevelContainer: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+        backgroundColor: "#79d78f"
+    },
 });
 
 export class BleScreen extends Component{
@@ -29,6 +36,7 @@ export class BleScreen extends Component{
         active: false,
         found: false,
         connected: false,
+        complete: false,
         waterLevel: 0
     }
 
@@ -93,7 +101,12 @@ export class BleScreen extends Component{
                 this.setState({ waterLevel: value })
                 break
             }
-            case WalterBleEvent.NOTIFYON:
+            case WalterBleEvent.NOTIFYON: {
+                setTimeout(() => {
+                    this.setState({ instr: "", complete: true})
+                }, 700)
+                break
+            }
             case WalterBleEvent.NOTIFYOFF:
             default:
                 break
@@ -120,17 +133,30 @@ export class BleScreen extends Component{
             btnImage = require('../resources/water-bottle-blue.png')
         }
 
+        if (this.state.complete) {
+            btnImage = null
+        }
+
         return (
-            <View style={styles.walterContainer}>
-                <BlinkingButton
+            <View>
+                <View style={styles.container}>
+                    <BlinkingButton
+                        key={this.state.btnColor}
+                        size={Dimensions.get('window').width/3} 
+                        blink= {this.state.active} 
+                        imageSrc={btnImage}
+                        color={this.state.btnColor}
+                        onPress={() => this.onBtnPress()}
+                        resolve={this.state.connected}
+                    />
+                    <Text style={styles.instrLabel}>{this.state.instr}</Text>
+                </View>
+                <MeasurementScreen
                     key={this.state.btnColor}
-                    size={Dimensions.get('window').width/3} 
-                    blink= {this.state.active} 
-                    imageSrc={btnImage}
-                    color= {this.state.btnColor}
-                    onPress={() => this.onBtnPress()}
+                    enabled={this.state.complete}
+                    backgroundColor={"#79d78f"}
+                    value={this.state.waterLevel} 
                 />
-                <Text style={styles.walterText}>{this.state.instr}</Text>
             </View>
         )
     }

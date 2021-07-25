@@ -4,7 +4,9 @@ import { Image, StyleSheet, Animated, View, TouchableOpacity } from 'react-nativ
 
 export class BlinkingButton extends Component{
     state = {
-        size: new Animated.Value(1.1)
+        animating: false,
+        size: new Animated.Value(1.1),
+        enabled: true
     }
     
     constructor(props) {
@@ -31,7 +33,7 @@ export class BlinkingButton extends Component{
         });
     }
 
-    startAnimation() {
+    startBlink() {
         Animated.timing(this.state.size, {
             toValue: 1.4,
             duration: 1000,
@@ -42,16 +44,31 @@ export class BlinkingButton extends Component{
                 duration: 1000,
                 useNativeDriver: true
             }).start(({finsihed}) => {
-                if (this.props.blink) this.startAnimation()
+                if (this.props.blink) this.startBlink()
                 else this.setState({animating: false})
             })
+        })
+    }
+
+    startResolve() {
+        Animated.timing(this.state.size, {
+            toValue: 8,
+            duration: 1000,
+            useNativeDriver: true
+        }).start(({finished}) => {
+            this.setState({animating: false, enabled: false})
         })
     }
 
     render() {
 
         if (this.props.blink && !this.state.animating) {
-            this.startAnimation()
+            this.startBlink()
+            this.setState({ animating: true })
+        }
+
+        if (this.props.resolve && !this.state.animating) {
+            this.startResolve()
             this.setState({ animating: true })
         }
 
@@ -60,19 +77,23 @@ export class BlinkingButton extends Component{
             scaleY: this.state.size,
         }];
 
+        if (this.state.enabled) {
+            return (
+                <View>
+                    <Animated.View style={[this.styles.circle, transform]}>
+                    </Animated.View>
+                    <TouchableOpacity onPress={() => this.props.onPress()}>
+                        <Image
+                            style={this.styles.image}
+                            source={this.props.imageSrc}
+                        />
+                    </TouchableOpacity>
+                </View>
+                
+            )
+        }
 
-        return (
-            <View>
-                <Animated.View style={[this.styles.circle, transform]}>
-                </Animated.View>
-                <TouchableOpacity onPress={() => this.props.onPress()}>
-                    <Image
-                        style={this.styles.image}
-                        source={this.props.imageSrc}
-                    />
-                </TouchableOpacity>
-            </View>
-            
-        )
+        return null
+        
     }
 }
