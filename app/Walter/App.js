@@ -7,15 +7,23 @@
  */
 
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { Dimensions, SafeAreaView, StyleSheet } from 'react-native';
 import { BleScreen } from "./src/screens/BleScreen.js"
+import { WaterLevel } from "./src/components/WaterLevel.js"
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const App = () => {
 
   return (
     <SafeAreaView style={styles.sectionContainer}>
-        <BleScreen />
+        <WaterLevel 
+          enabled={true}
+          width={Dimensions.get('window').width}
+          height={Dimensions.get('window').height}
+          waterColor={Colors.lighter}
+          waterLevel={0}
+          range={[0.2, 0.95]}
+        />
     </SafeAreaView>
   );
 };
