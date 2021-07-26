@@ -68,7 +68,7 @@ export class WaterLevel extends Component {
 
         if (level > 1) level = 1
         if (level < 0) level = 0
-        
+
         var h = this.props.height
         var r = this.props.range[1] - this.props.range[0]
         var v = (level * r) + this.props.range[0]

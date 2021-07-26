@@ -60,8 +60,7 @@ export class BlinkingButton extends Component{
         })
     }
 
-    render() {
-
+    componentDidUpdate() {
         if (this.props.blink && !this.state.animating) {
             this.startBlink()
             this.setState({ animating: true })
@@ -71,6 +70,9 @@ export class BlinkingButton extends Component{
             this.startResolve()
             this.setState({ animating: true })
         }
+    }
+
+    render() {
 
         const transform = [{
             scaleX: this.state.size,
