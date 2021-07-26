@@ -93,8 +93,6 @@ export class WalterBle {
         const buf = Buffer.from(value)
         const waterLevel = buf.readUInt32LE(0)
 
-        console.log("Water Level: " + waterLevel.toString())
-
         this.handler(WalterBleEvent.VALUE, waterLevel)
     }
 

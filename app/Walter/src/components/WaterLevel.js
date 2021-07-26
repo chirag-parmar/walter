@@ -65,12 +65,14 @@ export class WaterLevel extends Component {
     }
 
     updateLevel(level) {
+
+        if (level > 1) level = 1
+        if (level < 0) level = 0
+        
         var h = this.props.height
         var r = this.props.range[1] - this.props.range[0]
         var v = (level * r) + this.props.range[0]
         var l = (1 - v) * h
-
-        console.log(l)
 
         Animated.timing(this.state.levelTranslation, {
             toValue: l,
@@ -79,7 +81,6 @@ export class WaterLevel extends Component {
         }).start()
 
         if ( Math.abs(l - this.state.levelTranslation._value)/h > 0.1) {
-            console.log("boosted the wave")
             this.boostWave = true
         }
     }
@@ -91,7 +92,8 @@ export class WaterLevel extends Component {
                 <View style={{
                     width: this.props.width,
                     height: this.props.height,
-                    overflow: "hidden"
+                    overflow: "hidden",
+                    zIndex: 4
                 }}>
                     <Animated.View style={{
                         width: this.props.width,
