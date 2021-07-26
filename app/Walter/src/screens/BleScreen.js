@@ -104,7 +104,7 @@ export class BleScreen extends Component{
             case WalterBleEvent.NOTIFYON: {
                 setTimeout(() => {
                     this.setState({ instr: "", complete: true})
-                }, 700)
+                }, 500)
                 break
             }
             case WalterBleEvent.NOTIFYOFF:
@@ -115,6 +115,8 @@ export class BleScreen extends Component{
 
     componentDidMount() {
         this.ble = new WalterBle(this.bleHandler.bind(this))
+
+        this.ble.checkConnection()
 
         AppState.addEventListener('change', this.handleAppStateChange)
     }

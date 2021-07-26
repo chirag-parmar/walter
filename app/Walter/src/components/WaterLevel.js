@@ -1,38 +1,39 @@
 import React from 'react';
 import { Component } from 'react';
-import { Image, StyleSheet, Animated, View, TouchableOpacity } from 'react-native';
+import { Animated, View } from 'react-native';
 import Svg, { Path } from "react-native-svg";
 
 const AnimatedPath = new Animated.createAnimatedComponent(Path)
 
-export class WaterLevel extends Component{
+export class WaterLevel extends Component {
 
     state = {
         waveTranslation: new Animated.Value(0),
+        levelTranslation: new Animated.Value(0),
     }
 
     constructor(props) {
         super(props)
-
-        var t = this.props.width/10
+        
         var w = this.props.width
+        var t = this.props.width/10
         var h = this.props.height
-        var r = this.props.range[1] - this.props.range[0]
-        var v = (this.props.waterLevel * r) + this.props.range[0]
-        var l = (1 - v) * h
+        var l = this.props.height/10
 
         this.path = this.state.waveTranslation.interpolate(
             {
                 inputRange: [0, 1],
                 outputRange: [
-                    "M0 " + (l+50) + " C" + t*4 + " " + (l + 200) + " " + t*9 + " " + (l - 100) + " " + w + " " + (l+50) + " V" + h + " H0 V" + (l+50), 
-                    "M0 " + (l+50) + " C" + t*1 + " " + (l - 100) + " " + t*6 + " " + (l + 200) + " " + w + " " + (l+50) + " V" + h + " H0 V" + (l+50)
+                    "M0 " + (2*l) + " C" + t*4 + " " + (2.5*l) + " " + t*9 + " " + (-l/2) + " " + w + " " + (l/4) + " V" + h + " H0 V0", 
+                    "M0 " + (l/4) + " C" + t*1 + " " + (-l/2) + " " + t*6 + " " + (2.5*l) + " " + w + " " + (2*l) + " V" + h + " H0 V0"
                 ]
             },
         )
+
+        this.boostWave = true
     }
 
-    animate(dampFactor = 0.00) {   
+    animateWave(dampFactor = 0.00) {   
         Animated.timing(this.state.waveTranslation, {
             toValue: 1 - dampFactor,
             duration: 1000,
@@ -44,30 +45,69 @@ export class WaterLevel extends Component{
                 useNativeDriver: true
             }).start(({finished}) => {
                 if (dampFactor < 0.35) {
-                    this.animate(dampFactor+0.05)
+                    this.animateWave(dampFactor+0.05)
+                } else if (this.boostWave) {
+                    this.boostWave = false
+                    this.animateWave()
                 } else {
-                    this.animate(dampFactor)
+                    this.animateWave(dampFactor)
                 }
             })
         })
     }
 
     componentDidMount() {
-        this.animate()
+        this.animateWave()
+    }
+
+    componentDidUpdate() {
+        this.updateLevel(this.props.waterLevel)
+    }
+
+    updateLevel(level) {
+        var h = this.props.height
+        var r = this.props.range[1] - this.props.range[0]
+        var v = (level * r) + this.props.range[0]
+        var l = (1 - v) * h
+
+        console.log(l)
+
+        Animated.timing(this.state.levelTranslation, {
+            toValue: l,
+            duration: 1000,
+            useNativeDriver: false
+        }).start()
+
+        if ( Math.abs(l - this.state.levelTranslation._value)/h > 0.1) {
+            console.log("boosted the wave")
+            this.boostWave = true
+        }
     }
 
     render() {
 
         if (this.props.enabled) {
             return (
-                <View>
-                    <Svg height={this.props.height} width={this.props.width}>
-                        <AnimatedPath 
-                            d={this.path}
-                            fill={this.props.waterColor}
-                            stroke="none"
-                        />
-                    </Svg>
+                <View style={{
+                    width: this.props.width,
+                    height: this.props.height,
+                    overflow: "hidden"
+                }}>
+                    <Animated.View style={{
+                        width: this.props.width,
+                        height: this.props.height,
+                        position: "absolute",
+                        top: this.state.levelTranslation
+                    }}>
+                        <Svg height={this.props.height} width={this.props.width}>
+                            <AnimatedPath 
+                                d={this.path}
+                                fill={this.props.waterColor}
+                                stroke="none"
+                            />
+                        </Svg>
+                    </Animated.View>
+                        
                 </View>
                 
             )

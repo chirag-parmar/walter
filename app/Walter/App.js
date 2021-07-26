@@ -13,17 +13,10 @@ import { WaterLevel } from "./src/components/WaterLevel.js"
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const App = () => {
-
-  return (
+  
+  return (   
     <SafeAreaView style={styles.sectionContainer}>
-        <WaterLevel 
-          enabled={true}
-          width={Dimensions.get('window').width}
-          height={Dimensions.get('window').height}
-          waterColor={Colors.lighter}
-          waterLevel={0}
-          range={[0.2, 0.95]}
-        />
+        <BleScreen />
     </SafeAreaView>
   );
 };
