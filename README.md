@@ -38,10 +38,10 @@ make flash
     * [x] Port Capcitive Sensor library to nRF
     * [x] Define BLE services and characteristics
     * [ ] Finish battery level indication integration (depends on power supply design)
-  * [ ] App Design
-    * [ ] POC integration with BLE
-    * [ ] UI Wire Frame
-    * [ ] UI Design and Integration with BLE
+  * [x] App Design
+    * [x] POC integration with BLE
+    * [x] UI Wire Frame
+    * [x] UI Design and Integration with BLE
 * [ ] Hardware
   * [ ] 3D printed case
   * [ ] Aluminium or Copper Tape electrodes
