@@ -30,7 +30,7 @@ make flash
 * [ ] README Documentation
   * [ ] NRF softdevice and flashing instructions without debugger and with debugger 
 * [ ] Statistical and Analytical
-  * [ ] function for computing the line equation
+  * [ ] function for analysing a day's worth of data and extracting the num. of bottles drank metric
   * [ ] triggers for interacting with the user
   * [ ] Touch sensing
 * [ ] Software
@@ -42,14 +42,12 @@ make flash
     * [x] POC integration with BLE
     * [x] UI Wire Frame
     * [x] UI Design and Integration with BLE
+    * [ ] run ble recorded in background
+    * [ ] save data locally
 * [ ] Hardware
   * [ ] 3D printed case
   * [ ] Aluminium or Copper Tape electrodes
   * [ ] Power supply design
-    * [x] ~~LiPo Batteries~~ [RESULTS NOT PROMISING ENOUGH]
-      * [x] ~~Select appropriate battery (Quadcopter LiPo - 150mAh)~~ 
-      * [x] ~~Design charger and regulator ciruit - (*NOTE: charger circuit is ripped from the charger that came with the battery*)~~
-      * [x] ~~Fabricate PCB for charger and regulator circuit~~
     * [ ] Coin Cells/ Super Capacitors
       * [ ] Investigate if we can use coin cells/super capacitors
       * [ ] Calculate the usage time per charge and choose an appropriately sized battery

@@ -6,6 +6,7 @@ import { WaterLevel } from "../components/WaterLevel.js"
 import { RoundButton } from "../components/RoundButton.js"
 
 import {CalibrationScreen} from "./CalibrationScreen.js"
+import {SettingsScreen} from "./SettingsScreen.js"
 
 const styles = StyleSheet.create({
     container: {
@@ -40,21 +41,41 @@ const styles = StyleSheet.create({
         left: 0,
         fontSize: 40,
         zIndex: 5
-    }
+    },
+    settingsButton: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        zIndex: 5,
+        margin: 10
+    },
 });
 
 export class MeasurementScreen extends Component {
     state = {
-        modalVisible: false
+        calibrationModalVisible: false,
+        settingsModalVisible: false,
+        settings: {}
     }
 
     constructor(props) {
         super(props)
         this.calibrationValues = { min: [], max: []}
+        
     }
 
-    setModalVisible = (visible) => {
-        this.setState({ modalVisible: visible });
+    setCalibrationModalVisible = (visible) => {
+        this.setState({ calibrationModalVisible: visible });
+    }
+
+    setSettingsModalVisible = (visible) => {
+        this.setState({ settingsModalVisible: visible });
+    }
+
+    setSettings(settings) {
+        this.setState({
+            settings: settings
+        })
     }
 
     calibrate(recordType) {
@@ -74,9 +95,6 @@ export class MeasurementScreen extends Component {
             const minAvg = this.calibrationValues.min.reduce((s, v) => s + v)/this.calibrationValues.min.length
             const maxAvg = this.calibrationValues.max.reduce((s, v) => s + v)/this.calibrationValues.max.length
 
-            console.log("Average of Min Value: " + minAvg)
-            console.log("Average of Max Value: " + maxAvg)
-
             const percentValue = ((value - minAvg)/(maxAvg - minAvg)).toFixed(2)
 
             console.log("Percent Value in %: " + percentValue)
@@ -91,32 +109,51 @@ export class MeasurementScreen extends Component {
         if (this.props.enabled) {
             return (
                 <View style={[styles.container, {backgroundColor: this.props.backgroundColor}]}>
+                    <RoundButton
+                        style={styles.settingsButton} 
+                        size={Dimensions.get('window').width/10}
+                        color="#FFFFFF"
+                        onPress={() => this.setSettingsModalVisible(true)}
+                        imageSrc={require('../resources/ellipsis.png')}
+                    />
                     <WaterLevel
                         enabled={this.props.enabled}
                         width={Dimensions.get('window').width}
                         height={Dimensions.get('window').height}
                         waterColor={"#000000"}
                         waterLevel={this.getPercentageLevel(this.props.value)}
-                        range={[0.2, 0.95]}
+                        range={[0, 1]}
                     />
                     <Text style={styles.label}>1x</Text>
                     <RoundButton
                         style={styles.calibrateButton} 
                         size={Dimensions.get('window').width/7}
                         color="#FFFFFF"
-                        onPress={() => this.setModalVisible(true)}
+                        onPress={() => this.setCalibrationModalVisible(true)}
                         imageSrc={require('../resources/water-bottle-blue.png')}
                     />
                     <Modal
                         animationType="slide"
                         transparent={false}
-                        visible={this.state.modalVisible}
-                        onRequestClose={() => this.setModalVisible(false)}
+                        visible={this.state.calibrationModalVisible}
+                        onRequestClose={() => this.setCalibrationModalVisible(false)}
                     >
                         <CalibrationScreen 
                             handleCalibrateMin={() => this.calibrate("min")}
                             handleCalibrateMax={() => this.calibrate("max")}
-                            handleFinishCalibration={() => this.setModalVisible(false)} 
+                            handleFinishCalibration={() => this.setCalibrationModalVisible(false)} 
+                        />
+                    </Modal>
+                    <Modal
+                        animationType="slide"
+                        transparent={false}
+                        visible={this.state.settingsModalVisible}
+                        onRequestClose={() => this.setSettingsModalVisible(false)}
+                    >
+                        <SettingsScreen
+                            settings={this.state.settings}
+                            handleSettings={(settings) => this.setSettings(settings)}
+                            handleFinishSettings={() => this.setSettingsModalVisible(false)} 
                         />
                     </Modal>
                 </View>
