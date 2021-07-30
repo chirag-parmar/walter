@@ -1,6 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
-import { AppState, Dimensions, StyleSheet, View, Text } from 'react-native';
+import { AppState, Dimensions, StyleSheet, View, Text, DeviceEventEmitter } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 import { BlinkingButton } from "../components/BlinkingButton.js"
@@ -37,7 +37,6 @@ export class BleScreen extends Component{
         found: false,
         connected: false,
         complete: false,
-        waterLevel: 0
     }
 
     onBtnPress() {
@@ -51,11 +50,11 @@ export class BleScreen extends Component{
 
     bleHandler(event, value) {
         switch(event) {
-            case WalterBleEvent.SCANNING: {
+            case "scanning": {
                 this.setState({ active: true })
                 break
             }
-            case WalterBleEvent.SCANNED: {
+            case "scanned": {
                 if (this.state.found) {
                     this.setState({
                         active: false,
@@ -67,14 +66,14 @@ export class BleScreen extends Component{
                 }
                 break
             }
-            case WalterBleEvent.FOUND: {
+            case "found": {
                 this.setState({ 
                     found: true,
                     instr: "Found"
                 })
                 break
             }
-            case WalterBleEvent.CONNECTED: {
+            case "connected": {
                 this.setState({ 
                     connected: true, 
                     active: false,
@@ -84,37 +83,37 @@ export class BleScreen extends Component{
                 this.ble.bond()
                 break
             }
-            case WalterBleEvent.DISCONNECTED: {
+            case "disconnected": {
                 this.setState({ 
                     connected: false,
                     found: false,
                 })
                 break
             }
-            case WalterBleEvent.BONDED: {
+            case "bonded": {
                 if (this.state.connected) {
                     this.ble.switchOnNotify()
                 }
                 break
             }
-            case WalterBleEvent.VALUE: {
-                this.setState({ waterLevel: value })
-                break
-            }
-            case WalterBleEvent.NOTIFYON: {
+            case "notifyon": {
                 setTimeout(() => {
                     this.setState({ instr: "", complete: true})
                 }, 500)
                 break
             }
-            case WalterBleEvent.NOTIFYOFF:
+            case "notifyoff":
             default:
                 break
         }
     }
 
     componentDidMount() {
-        this.ble = new WalterBle(this.bleHandler.bind(this))
+        this.ble = new WalterBle()
+
+        DeviceEventEmitter.addListener("WalterBleEvent", (eventObj) => {
+            this.bleHandler(eventObj.event, eventObj.value)
+        })
 
         this.ble.checkConnection()
 
@@ -157,7 +156,6 @@ export class BleScreen extends Component{
                     key={this.state.btnColor}
                     enabled={this.state.complete}
                     backgroundColor={"#79d78f"}
-                    value={this.state.waterLevel} 
                 />
             </View>
         )

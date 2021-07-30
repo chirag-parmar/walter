@@ -1,6 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
-import { Modal, Pressable, Dimensions, StyleSheet, View, Text } from 'react-native';
+import { Modal, Pressable, Dimensions, StyleSheet, View, Text, DeviceEventEmitter } from 'react-native';
 
 import { WaterLevel } from "../components/WaterLevel.js"
 import { RoundButton } from "../components/RoundButton.js"
@@ -55,7 +55,8 @@ export class MeasurementScreen extends Component {
     state = {
         calibrationModalVisible: false,
         settingsModalVisible: false,
-        settings: {}
+        settings: {},
+        currentLevel: 0
     }
 
     constructor(props) {
@@ -79,7 +80,7 @@ export class MeasurementScreen extends Component {
     }
 
     calibrate(recordType) {
-        var recordValue = this.props.value
+        var recordValue = this.state.currentLevel
 
         if (recordType == "min") {
             this.calibrationValues.min.push(recordValue)
@@ -105,6 +106,14 @@ export class MeasurementScreen extends Component {
         return (value/(value*2)).toFixed(2)
     }
 
+    componentDidMount() {
+        DeviceEventEmitter.addListener("WalterBleEvent", (eventObj) => {
+            if (eventObj.event == "value") {
+                this.setState({ currentLevel: eventObj.value })
+            }
+        })
+    }
+
     render() {
         if (this.props.enabled) {
             return (
@@ -121,7 +130,7 @@ export class MeasurementScreen extends Component {
                         width={Dimensions.get('window').width}
                         height={Dimensions.get('window').height}
                         waterColor={"#000000"}
-                        waterLevel={this.getPercentageLevel(this.props.value)}
+                        waterLevel={this.getPercentageLevel(this.state.currentLevel)}
                         range={[0, 1]}
                     />
                     <Text style={styles.label}>1x</Text>
