@@ -35,7 +35,6 @@ class WalterBle {
     }
 
     scan() {
-        console.log("Scanning")
         BleManager.scan([], 5, true)
                 .then(() => {
                     console.log("scanning Started")
@@ -45,7 +44,6 @@ class WalterBle {
     }
 
     connect() {
-        console.log("Attempting Connection")
         BleManager.connect(this.id)
                 .then(() => {
                     console.log("Connected to " + this.name)
@@ -68,6 +66,7 @@ class WalterBle {
             this.id = peripheral.id
             this.name = peripheral.name
 
+            console.log("Found " + this.name + " - " + this.id)
             DeviceEventEmitter.emit('WalterBleEvent', {event: "found", value: null})
         }
     }
@@ -137,7 +136,6 @@ class WalterBle {
 
     checkConnection() {
         BleManager.getConnectedPeripherals([]).then((peripheralsArray) => {
-            console.log(peripheralsArray)
             for (const peripheral of peripheralsArray) {
                 BleManager.retrieveServices(peripheral.id)
                     .then((peripheralInfo) => {

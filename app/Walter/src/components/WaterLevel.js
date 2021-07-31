@@ -76,8 +76,6 @@ export class WaterLevel extends Component {
         var v = (level * r) + this.props.range[0]
         var l = (1 - v) * h
 
-        console.log(l)
-
         Animated.timing(this.state.levelTranslation, {
             toValue: l,
             duration: 1000,

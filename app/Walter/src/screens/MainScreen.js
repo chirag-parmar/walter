@@ -114,8 +114,6 @@ export class MainScreen extends Component {
 
             const percentValue = ((value - minAvg)/(maxAvg - minAvg)).toFixed(2)
 
-            console.log("Percent Value in %: " + percentValue)
-
             return percentValue
         }
 
