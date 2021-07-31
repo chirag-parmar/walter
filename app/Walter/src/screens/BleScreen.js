@@ -1,12 +1,10 @@
 import React from 'react';
 import { Component } from 'react';
-import { AppState, Dimensions, StyleSheet, View, Text, DeviceEventEmitter } from 'react-native';
+import { Dimensions, StyleSheet, View, Text, DeviceEventEmitter } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 import { BlinkingButton } from "../components/BlinkingButton.js"
-import { WalterBle, WalterBleEvent} from "../interfaces/WalterBle.js"
-
-import { MeasurementScreen } from "./MeasurementScreen.js"
+import { WalterBleInstance} from "../interfaces/WalterBle.js"
 
 const styles = StyleSheet.create({
     container: {
@@ -36,15 +34,17 @@ export class BleScreen extends Component{
         active: false,
         found: false,
         connected: false,
-        complete: false,
+        btnImage: require('../resources/water-bottle.png')
     }
 
     onBtnPress() {
         if (this.state.found && !this.state.connected && !this.state.active) {
             this.setState({ active: true })
-            this.ble.connect()
+            WalterBleInstance.connect()
         } else if (!this.state.found && !this.state.active) {
-            this.ble.scan()
+            WalterBleInstance.scan()
+        } else if (this.state.connected && !this.state.active) {
+            this.props.handleFinishBluetooth()
         }
     }
 
@@ -69,7 +69,8 @@ export class BleScreen extends Component{
             case "found": {
                 this.setState({ 
                     found: true,
-                    instr: "Found"
+                    instr: "Found",
+                    btnImage: require('../resources/water-bottle-blue.png')
                 })
                 break
             }
@@ -77,10 +78,10 @@ export class BleScreen extends Component{
                 this.setState({ 
                     connected: true, 
                     active: false,
-                    instr: "Connected",
+                    instr: "Connected. Tap to Close",
                     btnColor: "#79d78f"
                 })
-                this.ble.bond()
+                WalterBleInstance.bond()
                 break
             }
             case "disconnected": {
@@ -92,16 +93,11 @@ export class BleScreen extends Component{
             }
             case "bonded": {
                 if (this.state.connected) {
-                    this.ble.switchOnNotify()
+                    WalterBleInstance.switchOnNotify()
                 }
                 break
             }
-            case "notifyon": {
-                setTimeout(() => {
-                    this.setState({ instr: "", complete: true})
-                }, 500)
-                break
-            }
+            case "notifyon":
             case "notifyoff":
             default:
                 break
@@ -109,54 +105,27 @@ export class BleScreen extends Component{
     }
 
     componentDidMount() {
-        this.ble = new WalterBle()
 
         DeviceEventEmitter.addListener("WalterBleEvent", (eventObj) => {
             this.bleHandler(eventObj.event, eventObj.value)
         })
 
-        this.ble.checkConnection()
-
-        AppState.addEventListener('change', this.handleAppStateChange)
-    }
-    
-    handleAppStateChange = (nextAppState) => {
-        if (nextAppState.match(/inactive/)) {
-            this.ble.disconnect()
-        }
+        WalterBleInstance.checkConnection()
     }
 
     render() {
-        var btnImage = require('../resources/water-bottle.png')
-
-
-        if (this.state.found) {
-            btnImage = require('../resources/water-bottle-blue.png')
-        }
-
-        if (this.state.complete) {
-            btnImage = null
-        }
 
         return (
-            <View>
-                <View style={styles.container}>
-                    <BlinkingButton
-                        key={this.state.btnColor}
-                        size={Dimensions.get('window').width/3} 
-                        blink= {this.state.active} 
-                        imageSrc={btnImage}
-                        color={this.state.btnColor}
-                        onPress={() => this.onBtnPress()}
-                        resolve={this.state.connected}
-                    />
-                    <Text style={styles.instrLabel}>{this.state.instr}</Text>
-                </View>
-                <MeasurementScreen
+            <View style={styles.container}>
+                <BlinkingButton
                     key={this.state.btnColor}
-                    enabled={this.state.complete}
-                    backgroundColor={"#79d78f"}
+                    size={Dimensions.get('window').width/3} 
+                    blink= {this.state.active} 
+                    imageSrc={this.state.btnImage}
+                    color={this.state.btnColor}
+                    onPress={() => this.onBtnPress()}
                 />
+                <Text style={styles.instrLabel}>{this.state.instr}</Text>
             </View>
         )
     }

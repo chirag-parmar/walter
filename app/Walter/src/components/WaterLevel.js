@@ -66,6 +66,8 @@ export class WaterLevel extends Component {
 
     updateLevel(level) {
 
+        if(level === undefined || isNaN(level)) return
+
         if (level > 1) level = 1
         if (level < 0) level = 0
 
@@ -73,6 +75,8 @@ export class WaterLevel extends Component {
         var r = this.props.range[1] - this.props.range[0]
         var v = (level * r) + this.props.range[0]
         var l = (1 - v) * h
+
+        console.log(l)
 
         Animated.timing(this.state.levelTranslation, {
             toValue: l,

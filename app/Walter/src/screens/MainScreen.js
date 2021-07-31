@@ -1,12 +1,15 @@
 import React from 'react';
 import { Component } from 'react';
-import { Modal, Pressable, Dimensions, StyleSheet, View, Text, DeviceEventEmitter } from 'react-native';
+import { AppState, Modal, Dimensions, StyleSheet, View, Text, DeviceEventEmitter } from 'react-native';
 
 import { WaterLevel } from "../components/WaterLevel.js"
 import { RoundButton } from "../components/RoundButton.js"
 
+import { WalterBleInstance} from "../interfaces/WalterBle.js"
+
 import {CalibrationScreen} from "./CalibrationScreen.js"
 import {SettingsScreen} from "./SettingsScreen.js"
+import {BleScreen} from "./BleScreen.js"
 
 const styles = StyleSheet.create({
     container: {
@@ -49,12 +52,21 @@ const styles = StyleSheet.create({
         zIndex: 5,
         margin: 10
     },
+    bluetoothButton: {
+        position: "absolute",
+        bottom: Dimensions.get('window').width/7 + 10,
+        right: 0,
+        zIndex: 5,
+        margin: 10
+    },
 });
 
-export class MeasurementScreen extends Component {
+export class MainScreen extends Component {
     state = {
         calibrationModalVisible: false,
         settingsModalVisible: false,
+        bluetoothModalVisible: false,
+        connected: false,
         settings: {},
         currentLevel: 0
     }
@@ -71,6 +83,10 @@ export class MeasurementScreen extends Component {
 
     setSettingsModalVisible = (visible) => {
         this.setState({ settingsModalVisible: visible });
+    }
+
+    setBluetoothModalVisible = (visible) => {
+        this.setState({ bluetoothModalVisible: visible });
     }
 
     setSettings(settings) {
@@ -110,8 +126,20 @@ export class MeasurementScreen extends Component {
         DeviceEventEmitter.addListener("WalterBleEvent", (eventObj) => {
             if (eventObj.event == "value") {
                 this.setState({ currentLevel: eventObj.value })
+            } else if (eventObj.event == "connected") {
+                this.setState({ connected: true })
             }
         })
+
+        WalterBleInstance.checkConnection()
+
+        AppState.addEventListener('change', this.handleAppStateChange)
+    }
+    
+    handleAppStateChange = (nextAppState) => {
+        if (nextAppState.match(/inactive/)) {
+            WalterBleInstance.disconnect()
+        }
     }
 
     render() {
@@ -135,11 +163,18 @@ export class MeasurementScreen extends Component {
                     />
                     <Text style={styles.label}>1x</Text>
                     <RoundButton
+                        style={styles.bluetoothButton} 
+                        size={Dimensions.get('window').width/7}
+                        color="#FFFFFF"
+                        onPress={() => this.setBluetoothModalVisible(true)}
+                        imageSrc={require('../resources/bluetooth.png')}
+                    />
+                    <RoundButton
                         style={styles.calibrateButton} 
                         size={Dimensions.get('window').width/7}
                         color="#FFFFFF"
                         onPress={() => this.setCalibrationModalVisible(true)}
-                        imageSrc={require('../resources/water-bottle-blue.png')}
+                        imageSrc={require('../resources/calibrate.png')}
                     />
                     <Modal
                         animationType="slide"
@@ -163,6 +198,16 @@ export class MeasurementScreen extends Component {
                             settings={this.state.settings}
                             handleSettings={(settings) => this.setSettings(settings)}
                             handleFinishSettings={() => this.setSettingsModalVisible(false)} 
+                        />
+                    </Modal>
+                    <Modal
+                        animationType="slide"
+                        transparent={false}
+                        visible={this.state.bluetoothModalVisible}
+                        onRequestClose={() => this.setBluetoothModalVisible(false)}
+                    >
+                        <BleScreen 
+                            handleFinishBluetooth={() => this.setBluetoothModalVisible(false)}
                         />
                     </Modal>
                 </View>

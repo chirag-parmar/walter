@@ -7,16 +7,17 @@
  */
 
 import React from 'react';
-import { Dimensions, SafeAreaView, StyleSheet } from 'react-native';
-import { BleScreen } from "./src/screens/BleScreen.js"
-import { WaterLevel } from "./src/components/WaterLevel.js"
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { MainScreen } from "./src/screens/MainScreen.js"
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const App = () => {
   
   return (   
     <SafeAreaView style={styles.sectionContainer}>
-        <BleScreen />
+        <MainScreen 
+          enabled={true}
+          backgroundColor={"#79d78f"}/>
     </SafeAreaView>
   );
 };

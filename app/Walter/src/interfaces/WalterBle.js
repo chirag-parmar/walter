@@ -10,7 +10,7 @@ const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 const WALTER_SERVICE_UUID = "65ea1400-adcd-f440-923e-c5c7abab9c99"
 const WALTER_CHARACTERISITIC_UUID = "1401"
 
-export class WalterBle {
+class WalterBle {
 
     constructor() {
         this.id = null
@@ -39,7 +39,7 @@ export class WalterBle {
         BleManager.scan([], 5, true)
                 .then(() => {
                     console.log("scanning Started")
-                    //DeviceEventEmitter('WalterBleEvent', {event: "scanning", value: null})
+                    DeviceEventEmitter.emit('WalterBleEvent', {event: "scanning", value: null})
                 })
                 .catch((err) => console.log(err))
     }
@@ -49,7 +49,7 @@ export class WalterBle {
         BleManager.connect(this.id)
                 .then(() => {
                     console.log("Connected to " + this.name)
-                    DeviceEventEmitter('WalterBleEvent', {event: "connected", value: null})
+                    DeviceEventEmitter.emit('WalterBleEvent', {event: "connected", value: null})
                 })
                 .catch((err) => console.log(err))
     }
@@ -58,7 +58,7 @@ export class WalterBle {
         BleManager.disconnect(this.id)
                 .then(() => {
                     console.log("Disconnected from " + this.name)
-                    DeviceEventEmitter('WalterBleEvent', {event: "disconnected", value: null})
+                    DeviceEventEmitter.emit('WalterBleEvent', {event: "disconnected", value: null})
                 })
                 .catch((err) => console.log(err))
     }
@@ -68,13 +68,13 @@ export class WalterBle {
             this.id = peripheral.id
             this.name = peripheral.name
 
-            DeviceEventEmitter('WalterBleEvent', {event: "found", value: null})
+            DeviceEventEmitter.emit('WalterBleEvent', {event: "found", value: null})
         }
     }
       
     handleStopScan = () => {
         console.log('Scan is stopped. Devices: ', this.name)
-        DeviceEventEmitter('WalterBleEvent', {event: "scanned", value: null})
+        DeviceEventEmitter.emit('WalterBleEvent', {event: "scanned", value: null})
     }
 
     handleNotifications = ({ value, peripheral, characteristic, service }) => {
@@ -82,7 +82,7 @@ export class WalterBle {
         const buf = Buffer.from(value)
         const waterLevel = buf.readUInt32LE(0)
 
-        DeviceEventEmitter('WalterBleEvent', {event: "value", value: waterLevel})
+        DeviceEventEmitter.emit('WalterBleEvent', {event: "value", value: waterLevel})
     }
 
     switchOnNotify() {
@@ -92,7 +92,7 @@ export class WalterBle {
                     BleManager.startNotification(this.id, WALTER_SERVICE_UUID, WALTER_CHARACTERISITIC_UUID)
                         .then(() => {
                             console.log("Notification started")
-                            DeviceEventEmitter('WalterBleEvent', {event: "notifyon", value: null})
+                            DeviceEventEmitter.emit('WalterBleEvent', {event: "notifyon", value: null})
                         })
                         .catch((error) => console.log(error))
                 }
@@ -104,7 +104,7 @@ export class WalterBle {
         BleManager.startNotification(this.id, WALTER_SERVICE_UUID, WALTER_CHARACTERISITIC_UUID)
             .then(() => {
                 console.log("Notification stopped")
-                DeviceEventEmitter('WalterBleEvent', {event: "notifyoff", value: null})
+                DeviceEventEmitter.emit('WalterBleEvent', {event: "notifyoff", value: null})
             })
             .catch((error) => console.log(error))
     }
@@ -117,7 +117,7 @@ export class WalterBle {
                 if (peripheral.id == this.id) {
                     console.log("Already Bonded to " + this.name)
                     
-                    DeviceEventEmitter('WalterBleEvent', {event: "bonded", value: null})
+                    DeviceEventEmitter.emit('WalterBleEvent', {event: "bonded", value: null})
                     
                     bondFound = true
                     break
@@ -128,7 +128,7 @@ export class WalterBle {
                 BleManager.createBond(this.id)
                     .then(() => {
                         console.log("Bonded to " + this.name)
-                        DeviceEventEmitter('WalterBleEvent', {event: "bonded", value: null})
+                        DeviceEventEmitter.emit('WalterBleEvent', {event: "bonded", value: null})
                     })
                     .catch((err) => console.log(err))
             }
@@ -148,8 +148,8 @@ export class WalterBle {
                             this.name = peripheralInfo.advertising.localName
 
                             //emit event "found" and "connected"
-                            DeviceEventEmitter('WalterBleEvent', {event: "found", value: null})
-                            DeviceEventEmitter('WalterBleEvent', {event: "connected", value: null})
+                            DeviceEventEmitter.emit('WalterBleEvent', {event: "found", value: null})
+                            DeviceEventEmitter.emit('WalterBleEvent', {event: "connected", value: null})
                         }
                     })
                     .catch((err) => console.log(err))
@@ -158,3 +158,5 @@ export class WalterBle {
     }
 
 }
+
+export var WalterBleInstance = new WalterBle()

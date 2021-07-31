@@ -50,24 +50,9 @@ export class BlinkingButton extends Component{
         })
     }
 
-    startResolve() {
-        Animated.timing(this.state.size, {
-            toValue: 8,
-            duration: 1000,
-            useNativeDriver: true
-        }).start(({finished}) => {
-            this.setState({animating: false, enabled: false})
-        })
-    }
-
     componentDidUpdate() {
         if (this.props.blink && !this.state.animating) {
             this.startBlink()
-            this.setState({ animating: true })
-        }
-
-        if (this.props.resolve && !this.state.animating) {
-            this.startResolve()
             this.setState({ animating: true })
         }
     }
