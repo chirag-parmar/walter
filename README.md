@@ -34,7 +34,7 @@ make flash
   * [ ] triggers for interacting with the user
   * [ ] Touch sensing
 * [ ] Software
-  * [ ] Using NRF52840 Dongle to eliminate communication using uart scripts
+  * [ ] Using NRF52840 Dongle.
     * [x] Port Capcitive Sensor library to nRF
     * [x] Define BLE services and characteristics
     * [ ] Finish battery level indication integration (depends on power supply design)
@@ -42,8 +42,8 @@ make flash
     * [x] POC integration with BLE
     * [x] UI Wire Frame
     * [x] UI Design and Integration with BLE
-    * [ ] run ble recorded in background
-    * [ ] save data locally
+    * [x] run ble recorded in background
+    * [ ] save data locally - use firebase
 * [ ] Hardware
   * [ ] 3D printed case
   * [ ] Aluminium or Copper Tape electrodes
