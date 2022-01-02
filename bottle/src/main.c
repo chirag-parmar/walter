@@ -63,7 +63,7 @@
 #define DEAD_BEEF                       0xDEADBEEF                              /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
 // #define BATTERY_TIMER_INTERVAL          APP_TIMER_TICKS(1000)                   // 1000 ms intervals
-#define WLM_TIMER_INTERVAL              APP_TIMER_TICKS(5000)                   // 5 min intervals
+#define WLM_TIMER_INTERVAL              APP_TIMER_TICKS(30000)                   // 5 min intervals
 
 //POWER configuration
 #define TX_POWER_CONN                   -16
@@ -148,7 +148,7 @@ static void wlm_timer_timeout_handler(void * p_context) {
 
     ret_code_t err_code;
 
-    water_level = wlm_sensor_get_reading();
+    water_level = 100UL;
     err_code = water_level_update(&m_walter_service, &water_level);
 
     if (err_code == NRF_ERROR_INVALID_STATE) timers_stop();
@@ -682,6 +682,7 @@ int main(void)
     // Enter main loop.
     for (;;)
     {
+        NRF_LOG_INFO("Sleeping...")
         idle_state_handle();
     }
 }
