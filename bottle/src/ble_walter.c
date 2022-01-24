@@ -4,9 +4,7 @@
 /* SDK Includes */
 #include "sdk_common.h"
 #include "ble_srv_common.h"
-#include "nrf_gpio.h"
 #include "boards.h"
-#include "nrf_log.h"
 #include "app_error.h"
 
 /* Project Includes */

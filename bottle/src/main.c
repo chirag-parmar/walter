@@ -42,10 +42,10 @@
 #define APP_BLE_OBSERVER_PRIO           3                                       /**< Application's BLE observer priority. You shouldn't need to modify this value. */
 #define APP_BLE_CONN_CFG_TAG            1                                       /**< A tag identifying the SoftDevice BLE configuration. */
 
-#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(1000, UNIT_1_25_MS)        /**< Minimum acceptable connection interval (0.1 seconds). */
-#define MAX_CONN_INTERVAL               MSEC_TO_UNITS(1000, UNIT_1_25_MS)        /**< Maximum acceptable connection interval (0.2 second). */
-#define SLAVE_LATENCY                   0                                       /**< Slave latency. */
-#define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(4000, UNIT_10_MS)         /**< Connection supervisory timeout (4 seconds). */
+#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(1000, UNIT_1_25_MS)        /**< Minimum acceptable connection interval (4 seconds). */
+#define MAX_CONN_INTERVAL               MSEC_TO_UNITS(1000, UNIT_1_25_MS)        /**< Maximum acceptable connection interval (4 second). */
+#define SLAVE_LATENCY                   10                                      /**< Slave latency. */
+#define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(30000, UNIT_10_MS)         /**< Connection supervisory timeout (4 seconds). */
 
 #define FIRST_CONN_PARAMS_UPDATE_DELAY  APP_TIMER_TICKS(5000)                   /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (5 seconds). */
 #define NEXT_CONN_PARAMS_UPDATE_DELAY   APP_TIMER_TICKS(5000)                  /**< Time between each call to sd_ble_gap_conn_param_update after the first call (30 seconds). */
@@ -134,24 +134,32 @@ static void timers_start() {
     // APP_ERROR_CHECK(err_code);
 }
 
-static void timers_stop() {
-    ret_code_t err_code;
-    err_code = app_timer_stop(m_wlm_timer_id);
-    APP_ERROR_CHECK(err_code);
+// static void timers_stop() {
+//     ret_code_t err_code;
+//     err_code = app_timer_stop(m_wlm_timer_id);
+//     APP_ERROR_CHECK(err_code);
 
-    // err_code = app_timer_stop(m_battery_timer_id);
-    // APP_ERROR_CHECK(err_code);
-}
+//     // err_code = app_timer_stop(m_battery_timer_id);
+//     // APP_ERROR_CHECK(err_code);
+// }
 
-static uint32_t water_level = 0;
+static uint32_t water_level = 0UL;
 static void wlm_timer_timeout_handler(void * p_context) {
 
     ret_code_t err_code;
 
-    water_level = 100UL;
+    water_level = wlm_sensor_get_reading();
     err_code = water_level_update(&m_walter_service, &water_level);
 
-    if (err_code == NRF_ERROR_INVALID_STATE) timers_stop();
+    if ((err_code != NRF_SUCCESS) &&
+        (err_code != NRF_ERROR_INVALID_STATE) &&
+        (err_code != NRF_ERROR_RESOURCES) &&
+        (err_code != NRF_ERROR_BUSY) &&
+        (err_code != BLE_ERROR_GATTS_SYS_ATTR_MISSING)
+       )
+    {
+        APP_ERROR_HANDLER(err_code);
+    }
 }
 
 static void timers_init(void)
@@ -415,15 +423,15 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
             APP_ERROR_CHECK(err_code);
             break;
 
-        case BLE_GATTS_EVT_WRITE:
-            if (p_ble_evt->evt.gatts_evt.params.write.handle == m_walter_service.wlm_handles.cccd_handle &&
-                p_ble_evt->evt.gatts_evt.params.write.data[0] == 0x01) {
-                    timers_start();
-            } else if (p_ble_evt->evt.gatts_evt.params.write.handle == m_walter_service.wlm_handles.cccd_handle &&
-                       p_ble_evt->evt.gatts_evt.params.write.data[0] != 0x01) {
-                    timers_stop();
-            }
-            break;
+        // case BLE_GATTS_EVT_WRITE:
+        //     if (p_ble_evt->evt.gatts_evt.params.write.handle == m_walter_service.wlm_handles.cccd_handle &&
+        //         p_ble_evt->evt.gatts_evt.params.write.data[0] == 0x01) {
+        //             timers_start();
+        //     } else if (p_ble_evt->evt.gatts_evt.params.write.handle == m_walter_service.wlm_handles.cccd_handle &&
+        //                p_ble_evt->evt.gatts_evt.params.write.data[0] != 0x01) {
+        //             timers_stop();
+        //     }
+        //     break;
 
         default:
             // No implementation needed.

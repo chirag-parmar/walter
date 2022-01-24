@@ -12,9 +12,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "nrf_delay.h"
 #include "boards.h"
-#include "capsense.h"
 
 #include "capsense.h"
 #include "wlm_sensor.h"
