@@ -107,6 +107,12 @@ export class MainScreen extends Component {
         }
     }
 
+    eraseCalibration() {
+        this.calibrationValues.min = []
+        this.calibrationValues.max = []
+        console.log("Erased all calibrated values")
+    }
+
     getPercentageLevel(value) {
         if (this.calibrationValues.min.length > 0 && this.calibrationValues.max.length) {
             const minAvg = this.calibrationValues.min.reduce((s, v) => s + v)/this.calibrationValues.min.length
@@ -131,14 +137,14 @@ export class MainScreen extends Component {
 
         WalterBleInstance.checkConnection()
 
-        AppState.addEventListener('change', this.handleAppStateChange)
+        // AppState.addEventListener('change', this.handleAppStateChange)
     }
     
-    handleAppStateChange = (nextAppState) => {
-        if (nextAppState.match(/inactive/)) {
-            WalterBleInstance.disconnect()
-        }
-    }
+    // handleAppStateChange = (nextAppState) => {
+    //     if (nextAppState.match(/inactive/)) {
+    //         WalterBleInstance.disconnect()
+    //     }
+    // }
 
     render() {
         if (this.props.enabled) {
@@ -184,6 +190,7 @@ export class MainScreen extends Component {
                             handleCalibrateMin={() => this.calibrate("min")}
                             handleCalibrateMax={() => this.calibrate("max")}
                             handleFinishCalibration={() => this.setCalibrationModalVisible(false)} 
+                            handleEraseCalibration={() => this.eraseCalibration()}
                         />
                     </Modal>
                     <Modal

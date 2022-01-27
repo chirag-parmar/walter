@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Dimensions, Button, View, Text, DeviceEventEmitter } from "react-native";
 import { RoundButton } from "../components/RoundButton.js"
+import { RectangularButton } from "../components/RectangularButton.js"
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const styles = StyleSheet.create({
@@ -17,7 +18,8 @@ const styles = StyleSheet.create({
         margin: Dimensions.get("window").width/20
     },
     button: {
-        margin: 30
+        margin: 10,
+        color: "white"
     },
     instructions: {
         color: "white",
@@ -59,11 +61,24 @@ export class CalibrationScreen extends Component {
                  "4. Finish Calibration"
                 }
             </Text>
-            <Button 
-                style={styles.button}
-                title="Finish Calibration" 
-                onPress={this.props.handleFinishCalibration}
-            />
+            <View style={styles.buttonView}>
+                <RectangularButton 
+                    width={Dimensions.get('window').width*0.4}
+                    height={Dimensions.get('window').width*0.12}
+                    color="maroon"
+                    style={styles.button}
+                    title="Erase Calibration" 
+                    onPress={this.props.handleEraseCalibration}
+                />
+                <RectangularButton 
+                    style={styles.button}
+                    width={Dimensions.get('window').width*0.4}
+                    height={Dimensions.get('window').width*0.12}
+                    color="green"
+                    title="Finish Calibration" 
+                    onPress={this.props.handleFinishCalibration}
+                />
+            </View> 
         </View>
     )
   }
