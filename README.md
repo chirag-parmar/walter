@@ -38,20 +38,37 @@ make flash
     * [x] Port Capcitive Sensor library to nRF
     * [x] Define BLE services and characteristics
     * [ ] Finish battery level indication integration (depends on power supply design)
-  * [x] App Design
+  * [ ] App Design
     * [x] POC integration with BLE
     * [x] UI Wire Frame
     * [x] UI Design and Integration with BLE
     * [x] run ble recorded in background
     * [ ] save data locally - use firebase
 * [ ] Hardware
-  * [ ] 3D printed case
+  * [ ] Sensor fabrication documentation
+  * [ ] hardware fabrication documentation
   * [ ] Aluminium or Copper Tape electrodes
-  * [ ] Power supply design
-    * [ ] Coin Cells/ Super Capacitors
-      * [ ] Investigate if we can use coin cells/super capacitors
-      * [ ] Calculate the usage time per charge and choose an appropriately sized battery
-      * [ ] Design necessary circuitry for using coin/cell or supercapcitors
-      * [ ] Fabricate and Integrate circuitry and battery with nrf52840
+  * [x] ~~3D printed case~~ - Going with no case design. who cares about the case anyway. The board is waterproofed
+  * [x] Power supply design
+    * [x] Coin Cells/ Super Capacitors - Super capacitor can power only for 6 minutes
+      * [x] Investigate if we can use coin cells/super capacitors
+      * [x] Calculate the usage time per charge and choose an appropriately sized battery
+      * [x] Design necessary circuitry for using coin/cell or supercapcitors
+      * [x] Fabricate and Integrate circuitry and battery with nrf52840
+
+### Power Caclulations for Supercapacitor
+
+Current draw - 11uA for 8 s and 3 ma for 2s => ~600uA (average)
+Power Consumption at 3.6v = 3.6v * 600uA => 2.16mW
+
+Energy stored in the capacitor = 1/2*C*deltaV*deltaV = 0.5 * 1F * (3.6v- 2v)^2 = 1.28J Joules
+
+Energy = Power * Time => Time = Energy/Power => 1.28J/2.16mW => 592s => ~10minutes
+
+**Decision:** Use CR2032 or better rechargeable CR2032
 
 ### Future Ideas:
+
+* [ ] onboarding flow
+* [ ] social - share water usage statistics with a friend, challenges etc.
+* [ ] better UI
