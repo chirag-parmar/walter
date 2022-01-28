@@ -1,6 +1,6 @@
-import React, { useEffect }from 'react';
+import React from 'react';
 import { Component } from 'react';
-import { Dimensions, View, DeviceEventEmitter } from 'react-native';
+import { DeviceEventEmitter } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { WalterBleInstance} from "../interfaces/WalterBle.js"

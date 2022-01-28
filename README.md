@@ -46,9 +46,9 @@ make flash
     * [ ] save data locally - use firebase
       * [x] save device info
       * [ ] save readings
-      * [ ] save calibration values
-      * [ ] save settings
-      * [ ] save on change
+      * [x] save calibration values
+      * [x] save settings
+      * [x] save on change
 * [ ] Hardware
   * [ ] Sensor fabrication documentation
   * [ ] hardware fabrication documentation

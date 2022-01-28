@@ -1,6 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
-import { AppState, Modal, Dimensions, StyleSheet, View, Text, DeviceEventEmitter } from 'react-native';
+import { AppState, Modal, Dimensions, StyleSheet, View, DeviceEventEmitter } from 'react-native';
 
 import { ImageButton } from "../components/ImageButton.js"
 
@@ -8,6 +8,8 @@ import { WalterBleInstance} from "../interfaces/WalterBle.js"
 
 import {ConfigurationScreen} from "./ConfigurationScreen.js"
 import {BLEControlComponent} from "./BLEControlComponent.js"
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const styles = StyleSheet.create({
     container: {
@@ -71,7 +73,7 @@ export class MainScreen extends Component {
 
         console.log("Configuration Saved")
 
-        // TODO: Store values in asyncStorage with timestamp under the key @config
+        AsyncStorage.setItem("@configuration", JSON.stringify(this.config)).catch((e) => console.log(e))
     }
 
     calibrate(recordType) {
@@ -85,7 +87,7 @@ export class MainScreen extends Component {
             console.log("Recorded Max Value: " + recordValue)
         }
 
-        // TODO: store this.calibrationValues in storage under the key @calibration
+        AsyncStorage.setItem("@calibration", JSON.stringify(this.calibrationValues)).catch((e) => console.log(e))
     }
 
     eraseConfig() {
@@ -93,7 +95,9 @@ export class MainScreen extends Component {
         this.calibrationValues.max = []
         this.config = null
 
-        // TODO: remove @calibration and @config keys from database
+        AsyncStorage.removeItem("@calibration").catch((e) => console.log(e))
+        AsyncStorage.removeItem("@configuration").catch((e) => console.log(e))
+
         console.log("Erased all calibrated values")
     }
 
@@ -118,6 +122,20 @@ export class MainScreen extends Component {
                 this.setState({ connected: true })
             }
         })
+
+        AsyncStorage.getItem("@configuration").then((data) =>{
+            if (data) {
+                this.config = JSON.parse(data)
+                console.log("Loaded configuration from storage")
+            }
+        }).catch((e) => console.log(e))
+
+        AsyncStorage.getItem("@calibration").then((data) =>{
+            if (data) {
+                this.calibrationValues = JSON.parse(data)
+                console.log("Loaded calibration values from storage")
+            }
+        }).catch((e) => console.log(e))
 
         WalterBleInstance.checkConnection()
 
@@ -152,6 +170,7 @@ export class MainScreen extends Component {
                         onRequestClose={() => this.setConfigModalVisible(false)}
                     >
                         <ConfigurationScreen
+                            config = {this.config}
                             handleSaveConfig={(config) => this.saveConfig(config)}
                             handleEraseConfig={() => this.eraseConfig()} 
                             handleFinishConfig={() => this.setConfigModalVisible(false)} 

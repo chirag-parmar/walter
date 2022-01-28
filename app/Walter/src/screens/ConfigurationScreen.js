@@ -50,7 +50,7 @@ export class ConfigurationScreen extends Component {
 
     state={
         enabled: true,
-        capacity: ""
+        capacity: null
     }
 
     onChangeCapacity(number) {
@@ -62,6 +62,13 @@ export class ConfigurationScreen extends Component {
     }
 
     render() {
+        var inputText = ""
+
+        if (this.state.capacity) {
+            inputText = this.state.capacity
+        } else if (this.props.config && this.props.config["capacity"]) {
+            inputText = this.props.config["capacity"]
+        }
 
         if  (this.state.enabled) {
             return (
@@ -95,7 +102,7 @@ export class ConfigurationScreen extends Component {
                         width={Dimensions.get('window').width*0.8}
                         height={Dimensions.get('window').width*0.12}
                         onChangeText={text => this.onChangeCapacity(text)}
-                        value={this.state.capacity}
+                        value={inputText}
                         placeholder="Enter Capacity in ml"
                         keyboardType="number-pad"
                     />
