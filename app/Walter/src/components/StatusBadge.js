@@ -11,9 +11,6 @@ export class StatusBadge extends Component{
         super(props)
 
         this.styles = StyleSheet.create({
-            flexView: {
-                flex: 1,
-            },
             badge: {
                 flexDirection: "row",
                 width: this.props.width,
@@ -31,9 +28,9 @@ export class StatusBadge extends Component{
                 margin: this.props.height*0.15
             },
             label: {
+                flex: 1,
                 color: this.props.color,
                 fontSize: this.props.height*0.6,
-                flex: 1,
                 textAlign: "center"
             },
         });
@@ -43,7 +40,7 @@ export class StatusBadge extends Component{
 
         if (this.state.enabled) {
             return (
-                <View style={[this.styles.flexView]}>
+                <View>
                     <TouchableOpacity style={[this.styles.badge]} onPress={() => this.props.onPress()}>
                         <View style={[this.styles.light]} key={this.props.text}/>
                         <Text style={[this.styles.label]}> {this.props.text} </Text>

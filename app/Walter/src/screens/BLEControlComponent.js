@@ -119,12 +119,11 @@ export class BLEControlComponent extends Component{
 
         this.checkBLEStatus()
 
-        this.timer = setInterval(this.checkBLEStatus.bind(this), 10000)
+        this.timer = setInterval(this.checkBLEStatus.bind(this), 35000)
     }
 
     componentWillUnmount() {
         clearInterval(this.timer)
-        WalterBleInstance.destroy()
     }
 
     render() {

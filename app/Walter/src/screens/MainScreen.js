@@ -1,11 +1,12 @@
 import React from 'react';
 import { Component } from 'react';
-import { AppState, Modal, Dimensions, StyleSheet, View, DeviceEventEmitter } from 'react-native';
+import { AppState, Text, Modal, Dimensions, StyleSheet, View, DeviceEventEmitter } from 'react-native';
 
 import { ImageButton } from "../components/ImageButton.js"
 
 import {ConfigurationScreen} from "./ConfigurationScreen.js"
 import {BLEControlComponent} from "./BLEControlComponent.js"
+import { StatusBadge } from "../components/StatusBadge.js"
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -13,51 +14,64 @@ const styles = StyleSheet.create({
     container: {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
-        zIndex: 3,
-        alignItems: 'center',
-        justifyContent: 'center'
     },
-    measurement: {
-        fontSize: 30,
-        fontWeight: "bold",
-        color: "#000000",
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    bottomLeftCorner: {
-        justifyContent: 'flex-end'
+    row: {
+        display: "flex",
+        justifyContent: "flex-end",
+        flexDirection: "row"
     },
     configButton: {
-        position: "absolute",
-        top: 0,
-        right: 0,
-        zIndex: 5,
-        padding: 14
-    },
-    label: {
-        color: "white",
-        position: "absolute",
-        margin: 10,
-        bottom: 0,
-        left: 0,
-        fontSize: 40,
-        zIndex: 5
+        padding: 13,
     },
     bleBadge: {
         margin: 10,
+    },
+    statistics: {
+        display: "flex",
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        fontSize: 100,
+    },
+    statisticsTop: {
+        justifyContent: "flex-end",
+        height: Dimensions.get('window').height/2,
+        alignItems: "center",
+        flexDirection: "column",
+        fontSize: 100,
+    },
+    statisticsBottom: {
+        height: Dimensions.get('window').height/2,
+        width: Dimensions.get('window').width,
+        justifyContent: "flex-start",
+        alignItems: "center",
+        flexDirection: "column",
+        backgroundColor: "#000000",
+        fontSize: 100,
+    },
+    percentageLabel: {
+        fontSize: 100,
+    },
+    bottleLabel: {
+        color: "#79d78f",
+        fontSize: 20,
+        margin: 10
     }
 });
 
 export class MainScreen extends Component {
     state = {
         configModalVisible: false,
-        currentLevel: 0
+        currentLevel: 0,
+        readingLive: false
     }
 
     constructor(props) {
         super(props)
         this.calibrationValues = { min: [], max: []}
         this.config = null
+        this.liveTimer = null
     }
 
 
@@ -108,13 +122,22 @@ export class MainScreen extends Component {
             return percentValue
         }
 
-        return (value/(value*2)).toFixed(2)
+        return (0.5).toFixed(2)
     }
 
     componentDidMount() {
         DeviceEventEmitter.addListener("WalterBleEvent", (eventObj) => {
             if (eventObj.event == "value") {
-                this.setState({ currentLevel: eventObj.value })
+                this.setState({ currentLevel: eventObj.value, readingLive: true })
+
+                // clear existing running timer
+                if (this.liveTimer != null) clearTimeout(this.liveTimer)
+
+                //set timeout for automatically changing live to false
+                this.liveTimer = setTimeout(() => {
+                    this.setState({readingLive: false})
+                }, 30000)
+
                 timestamp = Date.now()
                 AsyncStorage.setItem("@" + timestamp.toString(), JSON.stringify(this.calibrationValues)).catch((e) => console.log(e))
             } 
@@ -136,21 +159,46 @@ export class MainScreen extends Component {
 
     }
 
+    componentWillUnmount() {
+        if (this.liveTimer != null) clearTimeout(this.liveTimer)
+    }
+
     render() {
         if (this.props.enabled) {
             return (
                 <View style={[styles.container, {backgroundColor: this.props.backgroundColor}]}>
-                    <BLEControlComponent
-                        style= {styles.bleBadge} 
-                        width= {Dimensions.get('window').width*0.5} 
-                        height= {Dimensions.get('window').width/12} 
-                    />
-                    <ImageButton
-                        style={styles.configButton} 
-                        size={Dimensions.get('window').width/14}
-                        onPress={() => this.setConfigModalVisible(true)}
-                        imageSrc={require('../resources/ellipsis.png')}
-                    />
+                    <View style={[styles.row]}>
+                        <BLEControlComponent
+                            style= {styles.bleBadge} 
+                            width= {Dimensions.get('window').width*0.5} 
+                            height= {Dimensions.get('window').width/12} 
+                        />
+                        <ImageButton
+                            style={styles.configButton} 
+                            size={Dimensions.get('window').width/14}
+                            onPress={() => this.setConfigModalVisible(true)}
+                            imageSrc={require('../resources/ellipsis.png')}
+                        />
+                    </View>
+                    
+                    <View style={styles.statistics}>
+                        <View style={styles.statisticsTop}>
+                            <Text style={styles.percentageLabel}>{this.getPercentageLevel(this.state.currentLevel)*100}%</Text>
+                        </View>
+                        <View style={styles.statisticsBottom}>
+                            <Text style={styles.bottleLabel}>Bottles: 3 | 1700ml</Text>
+                            <StatusBadge
+                                key = {this.state.readingLive } 
+                                style= {{margin: 0}}
+                                width= {Dimensions.get('window').width/2} 
+                                height= {Dimensions.get('window').width/12} 
+                                color= "#79d78f"
+                                lightColor= {this.state.readingLive ? "green" : "gray"}
+                                onPress= {()  => console.log("liveness button")}
+                                text= {this.state.readingLive ? "Sensor Live" : "Sensor Offline"}
+                            />
+                        </View>
+                    </View>
                     <Modal
                         animationType="slide"
                         transparent={true}

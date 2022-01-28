@@ -41,7 +41,7 @@ make flash
     * [x] Port Capcitive Sensor library to nRF
     * [x] Define BLE services and characteristics
     * [ ] Finish battery level indication integration (depends on power supply design)
-  * [ ] App Design
+  * [x] App Design
     * [x] POC integration with BLE
     * [x] UI Wire Frame
     * [x] UI Design and Integration with BLE
@@ -52,11 +52,11 @@ make flash
       * [x] save calibration values
       * [x] save settings
       * [x] save on change
-    * [ ] Main screen statistics design
+    * [x] Main screen statistics design
 * [ ] Hardware
   * [ ] Sensor fabrication documentation
   * [ ] hardware fabrication documentation
-  * [ ] Aluminium or Copper Tape electrodes
+  * [x] ~~Aluminium or Copper Tape electrodes~~ - didn't try but shouldn't be too different
   * [x] ~~3D printed case~~ - Going with no case design. who cares about the case anyway. The board is waterproofed
   * [x] Power supply design
     * [x] Coin Cells/ Super Capacitors - Super capacitor can power only for 6 minutes
