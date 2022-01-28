@@ -9,6 +9,7 @@ const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 const WALTER_SERVICE_UUID = "65ea1400-adcd-f440-923e-c5c7abab9c99"
 const WALTER_CHARACTERISITIC_UUID = "1401"
+const WALTER_CHARACTERISITIC_UUID_FULL = "65ea1401-adcd-f440-923e-c5c7abab9c99"
 
 class WalterBle {
 
@@ -84,7 +85,7 @@ class WalterBle {
     switchOnNotify(peripheral) {
         BleManager.retrieveServices(peripheral.id)
             .then((peripheralInfo) => {
-                if (peripheralInfo.advertising.serviceUUIDs.includes(WALTER_SERVICE_UUID)) {
+                if (peripheralInfo.id == peripheral.id) {
                     BleManager.startNotification(peripheral.id, WALTER_SERVICE_UUID, WALTER_CHARACTERISITIC_UUID)
                         .then(() => {
                             console.log("Notification started")
@@ -97,7 +98,7 @@ class WalterBle {
     }
 
     switchOffNotify(peripheral) {
-        BleManager.startNotification(peripheral.id, WALTER_SERVICE_UUID, WALTER_CHARACTERISITIC_UUID)
+        BleManager.stopNotification(peripheral.id, WALTER_SERVICE_UUID, WALTER_CHARACTERISITIC_UUID)
             .then(() => {
                 console.log("Notification stopped")
                 DeviceEventEmitter.emit('WalterBleEvent', {event: "notifyoff", value: null})
@@ -109,9 +110,9 @@ class WalterBle {
         BleManager.getBondedPeripherals([]).then((bondedPeripheralsArray) => {
             var bondFound = false;
 
-            for(const peripheral of bondedPeripheralsArray) {
-                if (peripheral.id == peripheral.id) {
-                    console.log("Already Bonded to " + this.name)
+            for(const _peripheral of bondedPeripheralsArray) {
+                if (_peripheral.id == peripheral.id) {
+                    console.log("Already Bonded to " + peripheral.name)
                     
                     DeviceEventEmitter.emit('WalterBleEvent', {event: "bonded", value: null})
                     

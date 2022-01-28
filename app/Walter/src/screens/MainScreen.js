@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
 export class MainScreen extends Component {
     state = {
         configModalVisible: false,
-        connected: false,
         currentLevel: 0
     }
 
@@ -118,9 +117,10 @@ export class MainScreen extends Component {
         DeviceEventEmitter.addListener("WalterBleEvent", (eventObj) => {
             if (eventObj.event == "value") {
                 this.setState({ currentLevel: eventObj.value })
-            } else if (eventObj.event == "connected") {
-                this.setState({ connected: true })
-            }
+                timestamp = Date.now()
+                console.log(timestamp.toString(), this.state.currentLevel)
+                AsyncStorage.setItem("@" + timestamp.toString(), JSON.stringify(this.calibrationValues)).catch((e) => console.log(e))
+            } 
         })
 
         AsyncStorage.getItem("@configuration").then((data) =>{
@@ -139,14 +139,14 @@ export class MainScreen extends Component {
 
         WalterBleInstance.checkConnection()
 
-        AppState.addEventListener('change', this.handleAppStateChange)
+        //AppState.addEventListener('change', this.handleAppStateChange)
     }
     
-    handleAppStateChange = (nextAppState) => {
-        if (nextAppState.match(/inactive/)) {
-            WalterBleInstance.disconnect()
-        }
-    }
+    // handleAppStateChange = (nextAppState) => {
+    //     if (nextAppState.match(/inactive/)) {
+    //         WalterBleInstance.disconnect()
+    //     }
+    // }
 
     render() {
         if (this.props.enabled) {
@@ -165,7 +165,7 @@ export class MainScreen extends Component {
                     />
                     <Modal
                         animationType="slide"
-                        transparent={false}
+                        transparent={true}
                         visible={this.state.configModalVisible}
                         onRequestClose={() => this.setConfigModalVisible(false)}
                     >

@@ -15,7 +15,6 @@ export class BLEControlComponent extends Component{
     }
 
     onBtnPress() {
-        console.log("Pressing")
         if (!this.state.active){
             if (this.state.bleStatus == "disconnected") {
                 WalterBleInstance.connect(this.state.device)
@@ -95,6 +94,7 @@ export class BLEControlComponent extends Component{
                     WalterBleInstance.checkConnection(this.state.device).then((connected) => {
                         if (connected) {
                             this.setState({ bleStatus: "connected" })
+                            WalterBleInstance.bond(this.state.device)
                         } else {
                             this.setState({ bleStatus: "disconnected" })
                         }
@@ -113,9 +113,6 @@ export class BLEControlComponent extends Component{
                     AsyncStorage.setItem("@device", JSON.stringify(this.state.device)).catch((e) => console.log(e))
                 }
             })
-
-
-        // setTimeout(this.checkBLEStatus.bind(this), 10000)
         
     }
 
@@ -127,6 +124,11 @@ export class BLEControlComponent extends Component{
 
         this.checkBLEStatus()
 
+        this.timer = setInterval(this.checkBLEStatus.bind(this), 10000)
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timer)
     }
 
     render() {
