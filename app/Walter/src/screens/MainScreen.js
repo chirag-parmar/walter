@@ -4,8 +4,6 @@ import { AppState, Modal, Dimensions, StyleSheet, View, DeviceEventEmitter } fro
 
 import { ImageButton } from "../components/ImageButton.js"
 
-import { WalterBleInstance} from "../interfaces/WalterBle.js"
-
 import {ConfigurationScreen} from "./ConfigurationScreen.js"
 import {BLEControlComponent} from "./BLEControlComponent.js"
 
@@ -118,7 +116,6 @@ export class MainScreen extends Component {
             if (eventObj.event == "value") {
                 this.setState({ currentLevel: eventObj.value })
                 timestamp = Date.now()
-                console.log(timestamp.toString(), this.state.currentLevel)
                 AsyncStorage.setItem("@" + timestamp.toString(), JSON.stringify(this.calibrationValues)).catch((e) => console.log(e))
             } 
         })
@@ -137,16 +134,7 @@ export class MainScreen extends Component {
             }
         }).catch((e) => console.log(e))
 
-        WalterBleInstance.checkConnection()
-
-        //AppState.addEventListener('change', this.handleAppStateChange)
     }
-    
-    // handleAppStateChange = (nextAppState) => {
-    //     if (nextAppState.match(/inactive/)) {
-    //         WalterBleInstance.disconnect()
-    //     }
-    // }
 
     render() {
         if (this.props.enabled) {

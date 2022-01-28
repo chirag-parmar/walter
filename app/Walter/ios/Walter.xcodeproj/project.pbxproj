@@ -145,7 +145,6 @@
 				2FAE3052AF6FF593689FE0E6 /* Pods-Walter-WalterTests.debug.xcconfig */,
 				7F07CB6E7B5FEE922BD0212A /* Pods-Walter-WalterTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

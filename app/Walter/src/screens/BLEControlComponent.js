@@ -3,7 +3,7 @@ import { Component } from 'react';
 import { DeviceEventEmitter } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { WalterBleInstance} from "../interfaces/WalterBle.js"
+import { WalterBleInstance } from "../interfaces/WalterBle.js"
 import { StatusBadge } from "../components/StatusBadge.js"
 
 export class BLEControlComponent extends Component{
@@ -22,7 +22,7 @@ export class BLEControlComponent extends Component{
                 WalterBleInstance.connect(this.state.device)
             } else if (this.state.bleStatus == "setup") {
                 this.setState({ active: true })
-                WalterBleInstance.scan()
+                WalterBleInstance.scan(5000)
             } else if (this.state.bleStatus == "connected") {
                 WalterBleInstance.disconnect(this.state.device)
             }
@@ -51,14 +51,7 @@ export class BLEControlComponent extends Component{
             }
             case "connected": {
                 this.setState({ bleStatus: "connected" })
-                WalterBleInstance.bond(this.state.device)
-                break
-            }
-            case "bonded": {
-                WalterBleInstance.checkConnection(this.state.device).then((connected) => {
-                    if (connected) WalterBleInstance.switchOnNotify(this.state.device);
-                })
-
+                WalterBleInstance.switchOnNotify(this.state.device);
                 break
             }
             case "disconnected": {
@@ -66,8 +59,6 @@ export class BLEControlComponent extends Component{
 
                 break
             }
-            case "notifyon":
-            case "notifyoff":
             default:
                 break
         }
@@ -76,17 +67,20 @@ export class BLEControlComponent extends Component{
     checkBLEStatus() {
 
         console.log("Checking BLE Status")
+        WalterBleInstance.checkPowerOnStatus()
 
         AsyncStorage.getItem("@device")
             .then((data) => {
 
                 // if data is in storage but not in the app's context -> add it
                 if (!this.state.device && data) {
+                    console.log("found device in storage")
                     this.setState({device: JSON.parse(data)})
                 }
 
                 // if the data is not in storage but is in the memory -> store it
                 if (!data && this.state.device) {
+                    console.log("found device in memory")
                     AsyncStorage.setItem("@device", JSON.stringify(this.state.device)).catch((e) => console.log(e))
                 } 
 
@@ -94,9 +88,10 @@ export class BLEControlComponent extends Component{
                     WalterBleInstance.checkConnection(this.state.device).then((connected) => {
                         if (connected) {
                             this.setState({ bleStatus: "connected" })
-                            WalterBleInstance.bond(this.state.device)
+                            WalterBleInstance.switchOnNotify(this.state.device)
                         } else {
                             this.setState({ bleStatus: "disconnected" })
+                            WalterBleInstance.connect(this.state.device)
                         }
                     })
                     
@@ -129,6 +124,7 @@ export class BLEControlComponent extends Component{
 
     componentWillUnmount() {
         clearInterval(this.timer)
+        WalterBleInstance.destroy()
     }
 
     render() {

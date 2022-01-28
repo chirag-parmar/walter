@@ -1,72 +1,95 @@
 
 
 import { NativeModules, NativeEventEmitter, DeviceEventEmitter } from 'react-native';
-import BleManager from 'react-native-ble-manager';
+import { BleManager } from 'react-native-ble-plx';
 import { Buffer } from 'buffer';
 
-const BleManagerModule = NativeModules.BleManager;
-const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+// const BleManagerModule = NativeModules.BleManager;
+// const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+
+export const manager = new BleManager();
 
 const WALTER_SERVICE_UUID = "65ea1400-adcd-f440-923e-c5c7abab9c99"
 const WALTER_CHARACTERISITIC_UUID = "1401"
-const WALTER_CHARACTERISITIC_UUID_FULL = "65ea1401-adcd-f440-923e-c5c7abab9c99"
 
 class WalterBle {
 
     constructor() {
-
-        BleManager.start({showAlert: false})
-
-        this.handlerDiscover = bleManagerEmitter.addListener(
-            'BleManagerDiscoverPeripheral',
-            this.handleDiscoverPeripheral
-        )
-    
-        this.handlerStop = bleManagerEmitter.addListener(
-            'BleManagerStopScan',
-            this.handleStopScan
-        )
-
-        this.handlerNotify = bleManagerEmitter.addListener(
-            "BleManagerDidUpdateValueForCharacteristic",
-            this.handleNotifications
-        )
+        this.manager = new BleManager('bleManagerRestoredState', (bleRestoredState) => {
+                if (bleRestoredState != null) {
+                    console.log("Restored Bluetooth")
+                    console.log(bleRestoredState.connectedPeripherals)
+                }
+        })
+        this.power = false
+        this.notifySubscription = null
     }
 
-    scan() {
-        BleManager.scan([], 5, true)
-                .then(() => {
-                    console.log("scanning Started")
-                    DeviceEventEmitter.emit('WalterBleEvent', {event: "scanning", value: null})
-                })
-                .catch((err) => console.log(err))
+    destroy() {
+        console.log("Destroyed BLE manager")
+        if (this.notifySubscription != null) this.notifySubscription.remove()
+        this.manager.destroy()
+    }
+
+    checkPowerOnStatus()  {
+        this.manager.state().then((state) => {
+            if (state === 'PoweredOn') this.power = true
+            else this.power = false
+        })
+    }
+
+    scan(timeout) {
+        if (!this.power) {
+            console.log("BleManager is not powered on")
+            this.checkPowerOnStatus()
+            return
+        }
+
+        console.log("Scanning for Walters")
+        DeviceEventEmitter.emit('WalterBleEvent', {event: "scanning", value: null})
+
+        this.manager.startDeviceScan([WALTER_SERVICE_UUID], null, (error, device) => {
+            if (error) {
+                console.log(error)
+                return
+            }
+            this.manager.stopDeviceScan()
+            console.log("Found " + device.name + " - " + device.id)
+            DeviceEventEmitter.emit('WalterBleEvent', {event: "found", value: {id: device.id, name: device.name}})
+        });
+
+        // setTimeout(() => {
+        //     this.manager.stopDeviceScan()
+        //     console.log("Scan stopped")
+        //     DeviceEventEmitter.emit('WalterBleEvent', {event: "scanned", value: null})
+        // }, timeout)
     }
 
     connect(peripheral) {
-        BleManager.connect(peripheral.id)
-                .then(() => {
-                    console.log("Connected to " + peripheral.name)
-                    DeviceEventEmitter.emit('WalterBleEvent', {event: "connected", value: null})
-                })
-                .catch((err) => console.log(err))
+        if (!this.power) {
+            console.log("BleManager is not powered on")
+            this.checkPowerOnStatus()
+            return
+        }
+
+        this.manager.connectToDevice(peripheral.id).then((device) => {
+            console.log("Connected to " + device.name)
+            DeviceEventEmitter.emit('WalterBleEvent', {event: "connected", value: null})
+        }).catch((err) => console.log(err))
     }
 
     disconnect(peripheral) {
-        BleManager.disconnect(peripheral.id)
-                .then(() => {
-                    console.log("Disconnected from " + peripheral.name)
-                    DeviceEventEmitter.emit('WalterBleEvent', {event: "disconnected", value: null})
-                })
-                .catch((err) => console.log(err))
-    }
-
-    handleDiscoverPeripheral = (peripheral) => {
-        console.log(peripheral.name)
-        if (peripheral.advertising.serviceUUIDs.includes(WALTER_SERVICE_UUID)) {
-
-            console.log("Found " + peripheral.name + " - " + peripheral.id)
-            DeviceEventEmitter.emit('WalterBleEvent', {event: "found", value: {id: peripheral.id, name: peripheral.name}})
+        if (!this.power) {
+            console.log("BleManager is not powered on")
+            this.checkPowerOnStatus()
+            return
         }
+
+        this.manager.cancelDeviceConnection(peripheral.id).then((device) => {
+            console.log("Disconnected from " + peripheral.name)
+            DeviceEventEmitter.emit('WalterBleEvent', {event: "disconnected", value: null})
+        }).catch((err) => console.log(err))
+                
     }
       
     handleStopScan = () => {
@@ -74,83 +97,46 @@ class WalterBle {
         DeviceEventEmitter.emit('WalterBleEvent', {event: "scanned", value: null})
     }
 
-    handleNotifications = ({ value, peripheral, characteristic, service }) => {
-        // Convert bytes array to string
-        const buf = Buffer.from(value)
-        const waterLevel = buf.readUInt32LE(0)
-
-        DeviceEventEmitter.emit('WalterBleEvent', {event: "value", value: waterLevel})
-    }
-
     switchOnNotify(peripheral) {
-        BleManager.retrieveServices(peripheral.id)
-            .then((peripheralInfo) => {
-                if (peripheralInfo.id == peripheral.id) {
-                    BleManager.startNotification(peripheral.id, WALTER_SERVICE_UUID, WALTER_CHARACTERISITIC_UUID)
-                        .then(() => {
-                            console.log("Notification started")
-                            DeviceEventEmitter.emit('WalterBleEvent', {event: "notifyon", value: null})
-                        })
-                        .catch((error) => console.log(error))
+        if (!this.power) {
+            console.log("BleManager is not powered on")
+            this.checkPowerOnStatus()
+            return
+        }
+
+        this.manager.discoverAllServicesAndCharacteristicsForDevice(peripheral.id).then((device) => {
+            // if we are already listening then just return and don't create another listener
+            if (this.notifySubscription) return
+            
+            this.notifySubscription = this.manager.monitorCharacteristicForDevice(peripheral.id, WALTER_SERVICE_UUID, WALTER_CHARACTERISITIC_UUID, (e,c) => {
+                if (e) {
+                    console.log(e)
+                    return
                 }
+    
+                const buf = Buffer.from(c.value, 'base64')
+                const waterLevel = buf.readUInt32LE(0)
+    
+                console.log("Received a new reading: " + waterLevel.toString())
+                DeviceEventEmitter.emit('WalterBleEvent', {event: "value", value: waterLevel})
             })
-            .catch((err) => console.log(err))
+        }).catch(e => console.log(e))
+
+        
+
+        
     }
 
-    switchOffNotify(peripheral) {
-        BleManager.stopNotification(peripheral.id, WALTER_SERVICE_UUID, WALTER_CHARACTERISITIC_UUID)
-            .then(() => {
-                console.log("Notification stopped")
-                DeviceEventEmitter.emit('WalterBleEvent', {event: "notifyoff", value: null})
-            })
-            .catch((error) => console.log(error))
-    }
+    checkConnection(peripheral) {
+        if (!this.power) {
+            console.log("BleManager is not powered on")
+            this.checkPowerOnStatus()
+            return
+        }
 
-    bond(peripheral) {
-        BleManager.getBondedPeripherals([]).then((bondedPeripheralsArray) => {
-            var bondFound = false;
-
-            for(const _peripheral of bondedPeripheralsArray) {
-                if (_peripheral.id == peripheral.id) {
-                    console.log("Already Bonded to " + peripheral.name)
-                    
-                    DeviceEventEmitter.emit('WalterBleEvent', {event: "bonded", value: null})
-                    
-                    bondFound = true
-                    break
-                }
-            }
-
-            if (!bondFound) {
-                BleManager.createBond(peripheral.id)
-                    .then(() => {
-                        console.log("Bonded to " + peripheral.name)
-                        DeviceEventEmitter.emit('WalterBleEvent', {event: "bonded", value: null})
-                    })
-                    .catch((err) => console.log(err))
-            }
-        });
-    }
-
-    checkConnection(my_peripheral) {
-
-        return new Promise((resolve, _) => {
-            BleManager.getConnectedPeripherals([WALTER_SERVICE_UUID]).then((peripheralsArray) => {
-                    if(peripheralsArray && peripheralsArray.length > 0) {
-                        for (const peripheral of peripheralsArray) {
-                            if (peripheral.id == my_peripheral.id) {
-                                resolve(true)
-                            }
-                        }
-                    }
-                    
-                    resolve(false)
-                }).catch((e) => {
-                    resolve(false)
-                })
-        })
+        return this.manager.isDeviceConnected(peripheral.id)
     }
 
 }
 
-export var WalterBleInstance = new WalterBle()
+export const WalterBleInstance = new WalterBle()
