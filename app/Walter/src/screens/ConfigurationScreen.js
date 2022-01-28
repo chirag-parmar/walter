@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: Colors.darker
+      backgroundColor: Colors.darker,
     },
     buttonView: {
         flexDirection: "row"
@@ -33,6 +33,16 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         marginTop: 10,
         marginBottom: 10
+    },
+    heading: {
+        color: "white",
+        fontSize: 46,
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        marginTop: 10,
+        marginBottom: 10,
     }
 });
 
@@ -56,11 +66,12 @@ export class ConfigurationScreen extends Component {
         if  (this.state.enabled) {
             return (
                 <View style={styles.centeredView}>
+                    <Text style={styles.heading}>
+                        {"TRAIN  WALTER"}
+                    </Text>
                     <Text style={styles.instructions}>
-                        {"1. Empty the bottle and press the first button\n" +
-                        "2. Fill the bottle full and press the other button\n" +
-                        "3. Repeat above steps atleast 3 times\n" +
-                        "4. Finish Calibration"
+                        {"When bottle is empty press the \"Record Empty\" button. When bottle is full press the \"Record Full\" button\n\n" +
+                         "Enter the water bottle capacity in milli-litres"
                         }
                     </Text>
                     <RectangularButton 
@@ -68,7 +79,7 @@ export class ConfigurationScreen extends Component {
                         height={Dimensions.get('window').width*0.12}
                         color="magenta"
                         style={styles.button}
-                        title="Record Low" 
+                        title="Record Empty" 
                         onPress={this.props.handleCalibrateMin}
                     />
                     <RectangularButton 
@@ -76,7 +87,7 @@ export class ConfigurationScreen extends Component {
                         height={Dimensions.get('window').width*0.12}
                         color="magenta"
                         style={styles.button}
-                        title="Record High" 
+                        title="Record Full" 
                         onPress={this.props.handleCalibrateMax}
                     />
                     <TextInput
