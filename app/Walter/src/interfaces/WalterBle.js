@@ -13,8 +13,6 @@ const WALTER_CHARACTERISITIC_UUID = "1401"
 class WalterBle {
 
     constructor() {
-        this.id = null
-        this.name = null
 
         BleManager.start({showAlert: false})
 
@@ -43,36 +41,35 @@ class WalterBle {
                 .catch((err) => console.log(err))
     }
 
-    connect() {
-        BleManager.connect(this.id)
+    connect(peripheral) {
+        BleManager.connect(peripheral.id)
                 .then(() => {
-                    console.log("Connected to " + this.name)
+                    console.log("Connected to " + peripheral.name)
                     DeviceEventEmitter.emit('WalterBleEvent', {event: "connected", value: null})
                 })
                 .catch((err) => console.log(err))
     }
 
-    disconnect() {
-        BleManager.disconnect(this.id)
+    disconnect(peripheral) {
+        BleManager.disconnect(peripheral.id)
                 .then(() => {
-                    console.log("Disconnected from " + this.name)
+                    console.log("Disconnected from " + peripheral.name)
                     DeviceEventEmitter.emit('WalterBleEvent', {event: "disconnected", value: null})
                 })
                 .catch((err) => console.log(err))
     }
 
     handleDiscoverPeripheral = (peripheral) => {
+        console.log(peripheral.name)
         if (peripheral.advertising.serviceUUIDs.includes(WALTER_SERVICE_UUID)) {
-            this.id = peripheral.id
-            this.name = peripheral.name
 
-            console.log("Found " + this.name + " - " + this.id)
-            DeviceEventEmitter.emit('WalterBleEvent', {event: "found", value: null})
+            console.log("Found " + peripheral.name + " - " + peripheral.id)
+            DeviceEventEmitter.emit('WalterBleEvent', {event: "found", value: {id: peripheral.id, name: peripheral.name}})
         }
     }
       
     handleStopScan = () => {
-        console.log('Scan is stopped. Devices: ', this.name)
+        console.log('Scan is stopped')
         DeviceEventEmitter.emit('WalterBleEvent', {event: "scanned", value: null})
     }
 
@@ -84,11 +81,11 @@ class WalterBle {
         DeviceEventEmitter.emit('WalterBleEvent', {event: "value", value: waterLevel})
     }
 
-    switchOnNotify() {
-        BleManager.retrieveServices(this.id)
+    switchOnNotify(peripheral) {
+        BleManager.retrieveServices(peripheral.id)
             .then((peripheralInfo) => {
                 if (peripheralInfo.advertising.serviceUUIDs.includes(WALTER_SERVICE_UUID)) {
-                    BleManager.startNotification(this.id, WALTER_SERVICE_UUID, WALTER_CHARACTERISITIC_UUID)
+                    BleManager.startNotification(peripheral.id, WALTER_SERVICE_UUID, WALTER_CHARACTERISITIC_UUID)
                         .then(() => {
                             console.log("Notification started")
                             DeviceEventEmitter.emit('WalterBleEvent', {event: "notifyon", value: null})
@@ -99,8 +96,8 @@ class WalterBle {
             .catch((err) => console.log(err))
     }
 
-    switchOffNotify() {
-        BleManager.startNotification(this.id, WALTER_SERVICE_UUID, WALTER_CHARACTERISITIC_UUID)
+    switchOffNotify(peripheral) {
+        BleManager.startNotification(peripheral.id, WALTER_SERVICE_UUID, WALTER_CHARACTERISITIC_UUID)
             .then(() => {
                 console.log("Notification stopped")
                 DeviceEventEmitter.emit('WalterBleEvent', {event: "notifyoff", value: null})
@@ -108,12 +105,12 @@ class WalterBle {
             .catch((error) => console.log(error))
     }
 
-    bond() {
+    bond(peripheral) {
         BleManager.getBondedPeripherals([]).then((bondedPeripheralsArray) => {
             var bondFound = false;
 
             for(const peripheral of bondedPeripheralsArray) {
-                if (peripheral.id == this.id) {
+                if (peripheral.id == peripheral.id) {
                     console.log("Already Bonded to " + this.name)
                     
                     DeviceEventEmitter.emit('WalterBleEvent', {event: "bonded", value: null})
@@ -124,9 +121,9 @@ class WalterBle {
             }
 
             if (!bondFound) {
-                BleManager.createBond(this.id)
+                BleManager.createBond(peripheral.id)
                     .then(() => {
-                        console.log("Bonded to " + this.name)
+                        console.log("Bonded to " + peripheral.name)
                         DeviceEventEmitter.emit('WalterBleEvent', {event: "bonded", value: null})
                     })
                     .catch((err) => console.log(err))
@@ -134,24 +131,22 @@ class WalterBle {
         });
     }
 
-    checkConnection() {
-        BleManager.getConnectedPeripherals([]).then((peripheralsArray) => {
-            for (const peripheral of peripheralsArray) {
-                BleManager.retrieveServices(peripheral.id)
-                    .then((peripheralInfo) => {
-                        if (peripheralInfo.advertising.serviceUUIDs.includes(WALTER_SERVICE_UUID)) {
-                            console.log("Already Connected to " + peripheralInfo.advertising.localName)
+    checkConnection(my_peripheral) {
 
-                            this.id = peripheral.id
-                            this.name = peripheralInfo.advertising.localName
-
-                            //emit event "found" and "connected"
-                            DeviceEventEmitter.emit('WalterBleEvent', {event: "found", value: null})
-                            DeviceEventEmitter.emit('WalterBleEvent', {event: "connected", value: null})
+        return new Promise((resolve, _) => {
+            BleManager.getConnectedPeripherals([WALTER_SERVICE_UUID]).then((peripheralsArray) => {
+                    if(peripheralsArray && peripheralsArray.length > 0) {
+                        for (const peripheral of peripheralsArray) {
+                            if (peripheral.id == my_peripheral.id) {
+                                resolve(true)
+                            }
                         }
-                    })
-                    .catch((err) => console.log(err))
-            }
+                    }
+                    
+                    resolve(false)
+                }).catch((e) => {
+                    resolve(false)
+                })
         })
     }
 

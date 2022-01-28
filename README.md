@@ -44,6 +44,11 @@ make flash
     * [x] UI Design and Integration with BLE
     * [x] run ble recorded in background
     * [ ] save data locally - use firebase
+      * [x] save device info
+      * [ ] save readings
+      * [ ] save calibration values
+      * [ ] save settings
+      * [ ] save on change
 * [ ] Hardware
   * [ ] Sensor fabrication documentation
   * [ ] hardware fabrication documentation

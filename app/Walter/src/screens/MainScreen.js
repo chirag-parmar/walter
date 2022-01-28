@@ -2,14 +2,12 @@ import React from 'react';
 import { Component } from 'react';
 import { AppState, Modal, Dimensions, StyleSheet, View, Text, DeviceEventEmitter } from 'react-native';
 
-import { WaterLevel } from "../components/WaterLevel.js"
-import { RoundButton } from "../components/RoundButton.js"
+import { ImageButton } from "../components/ImageButton.js"
 
 import { WalterBleInstance} from "../interfaces/WalterBle.js"
 
-import {CalibrationScreen} from "./CalibrationScreen.js"
-import {SettingsScreen} from "./SettingsScreen.js"
-import {BleScreen} from "./BleScreen.js"
+import {ConfigurationScreen} from "./ConfigurationScreen.js"
+import {BLEControlComponent} from "./BLEControlComponent.js"
 
 const styles = StyleSheet.create({
     container: {
@@ -29,12 +27,12 @@ const styles = StyleSheet.create({
     bottomLeftCorner: {
         justifyContent: 'flex-end'
     },
-    calibrateButton: {
+    configButton: {
         position: "absolute",
-        bottom: 0,
+        top: 0,
         right: 0,
         zIndex: 5,
-        margin: 10
+        padding: 14
     },
     label: {
         color: "white",
@@ -45,54 +43,35 @@ const styles = StyleSheet.create({
         fontSize: 40,
         zIndex: 5
     },
-    settingsButton: {
-        position: "absolute",
-        top: 0,
-        right: 0,
-        zIndex: 5,
-        margin: 10
-    },
-    bluetoothButton: {
-        position: "absolute",
-        bottom: Dimensions.get('window').width/7 + 10,
-        right: 0,
-        zIndex: 5,
-        margin: 10
-    },
+    bleBadge: {
+        margin: 10,
+    }
 });
 
 export class MainScreen extends Component {
     state = {
-        calibrationModalVisible: false,
-        settingsModalVisible: false,
-        bluetoothModalVisible: false,
+        configModalVisible: false,
         connected: false,
-        settings: {},
         currentLevel: 0
     }
 
     constructor(props) {
         super(props)
         this.calibrationValues = { min: [], max: []}
-        
+        this.config = null
     }
 
-    setCalibrationModalVisible = (visible) => {
-        this.setState({ calibrationModalVisible: visible });
+
+    setConfigModalVisible = (visible) => {
+        this.setState({ configModalVisible: visible });
     }
 
-    setSettingsModalVisible = (visible) => {
-        this.setState({ settingsModalVisible: visible });
-    }
+    saveConfig(config) {
+        this.config = config
 
-    setBluetoothModalVisible = (visible) => {
-        this.setState({ bluetoothModalVisible: visible });
-    }
+        console.log("Configuration Saved")
 
-    setSettings(settings) {
-        this.setState({
-            settings: settings
-        })
+        // TODO: Store values in asyncStorage with timestamp under the key @config
     }
 
     calibrate(recordType) {
@@ -105,11 +84,16 @@ export class MainScreen extends Component {
             this.calibrationValues.max.push(recordValue)
             console.log("Recorded Max Value: " + recordValue)
         }
+
+        // TODO: store this.calibrationValues in storage under the key @calibration
     }
 
-    eraseCalibration() {
+    eraseConfig() {
         this.calibrationValues.min = []
         this.calibrationValues.max = []
+        this.config = null
+
+        // TODO: remove @calibration and @config keys from database
         console.log("Erased all calibrated values")
     }
 
@@ -137,82 +121,42 @@ export class MainScreen extends Component {
 
         WalterBleInstance.checkConnection()
 
-        // AppState.addEventListener('change', this.handleAppStateChange)
+        AppState.addEventListener('change', this.handleAppStateChange)
     }
     
-    // handleAppStateChange = (nextAppState) => {
-    //     if (nextAppState.match(/inactive/)) {
-    //         WalterBleInstance.disconnect()
-    //     }
-    // }
+    handleAppStateChange = (nextAppState) => {
+        if (nextAppState.match(/inactive/)) {
+            WalterBleInstance.disconnect()
+        }
+    }
 
     render() {
         if (this.props.enabled) {
             return (
                 <View style={[styles.container, {backgroundColor: this.props.backgroundColor}]}>
-                    <RoundButton
-                        style={styles.settingsButton} 
-                        size={Dimensions.get('window').width/10}
-                        color="#FFFFFF"
-                        onPress={() => this.setSettingsModalVisible(true)}
+                    <BLEControlComponent
+                        style= {styles.bleBadge} 
+                        width= {Dimensions.get('window').width*0.5} 
+                        height= {Dimensions.get('window').width/12} 
+                    />
+                    <ImageButton
+                        style={styles.configButton} 
+                        size={Dimensions.get('window').width/14}
+                        onPress={() => this.setConfigModalVisible(true)}
                         imageSrc={require('../resources/ellipsis.png')}
                     />
-                    <WaterLevel
-                        enabled={this.props.enabled}
-                        width={Dimensions.get('window').width}
-                        height={Dimensions.get('window').height}
-                        waterColor={"#000000"}
-                        waterLevel={this.getPercentageLevel(this.state.currentLevel)}
-                        range={[0, 1]}
-                    />
-                    <Text style={styles.label}>1x</Text>
-                    <RoundButton
-                        style={styles.bluetoothButton} 
-                        size={Dimensions.get('window').width/7}
-                        color="#FFFFFF"
-                        onPress={() => this.setBluetoothModalVisible(true)}
-                        imageSrc={require('../resources/bluetooth.png')}
-                    />
-                    <RoundButton
-                        style={styles.calibrateButton} 
-                        size={Dimensions.get('window').width/7}
-                        color="#FFFFFF"
-                        onPress={() => this.setCalibrationModalVisible(true)}
-                        imageSrc={require('../resources/calibrate.png')}
-                    />
                     <Modal
                         animationType="slide"
                         transparent={false}
-                        visible={this.state.calibrationModalVisible}
-                        onRequestClose={() => this.setCalibrationModalVisible(false)}
+                        visible={this.state.configModalVisible}
+                        onRequestClose={() => this.setConfigModalVisible(false)}
                     >
-                        <CalibrationScreen 
+                        <ConfigurationScreen
+                            handleSaveConfig={(config) => this.saveConfig(config)}
+                            handleEraseConfig={() => this.eraseConfig()} 
+                            handleFinishConfig={() => this.setConfigModalVisible(false)} 
                             handleCalibrateMin={() => this.calibrate("min")}
-                            handleCalibrateMax={() => this.calibrate("max")}
-                            handleFinishCalibration={() => this.setCalibrationModalVisible(false)} 
-                            handleEraseCalibration={() => this.eraseCalibration()}
-                        />
-                    </Modal>
-                    <Modal
-                        animationType="slide"
-                        transparent={false}
-                        visible={this.state.settingsModalVisible}
-                        onRequestClose={() => this.setSettingsModalVisible(false)}
-                    >
-                        <SettingsScreen
-                            settings={this.state.settings}
-                            handleSettings={(settings) => this.setSettings(settings)}
-                            handleFinishSettings={() => this.setSettingsModalVisible(false)} 
-                        />
-                    </Modal>
-                    <Modal
-                        animationType="slide"
-                        transparent={false}
-                        visible={this.state.bluetoothModalVisible}
-                        onRequestClose={() => this.setBluetoothModalVisible(false)}
-                    >
-                        <BleScreen 
-                            handleFinishBluetooth={() => this.setBluetoothModalVisible(false)}
+                            handleCalibrateMax={() => this.calibrate("max")}                   
                         />
                     </Modal>
                 </View>

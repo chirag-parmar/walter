@@ -14,11 +14,15 @@ export class RectangularButton extends Component{
             rectangle: {
                 width: this.props.width,
                 height: this.props.height,
-                borderRadius: this.props.width * 0.05,
-                backgroundColor: this.props.color,
+                borderRadius: 5,
+                borderWidth: 1,
+                borderColor: this.props.color,
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
             },
+            buttonText: {
+                color: this.props.color
+            }
         });
     }
 
@@ -28,7 +32,7 @@ export class RectangularButton extends Component{
             return (
                 <View style={[this.styles.rectangle, this.props.style]}>
                     <TouchableOpacity  onPress={() => this.props.onPress()}>
-                        <Text style={[this.props.style]}>{this.props.title}</Text>
+                        <Text style={[this.styles.buttonText, this.props.style]}>{this.props.title}</Text>
                     </TouchableOpacity>
                 </View>
                 
