@@ -24,6 +24,7 @@
 #include "sensorsim.h"
 #include "ble_conn_state.h"
 #include "nrf_ble_gatt.h"
+#include "nrf_ble_lesc.h"
 #include "nrf_ble_qwr.h"
 #include "nrf_pwr_mgmt.h"
 #include "nrf_log.h"
@@ -38,7 +39,7 @@
 #define MANUFACTURER_NAME               "Parmar Industries"                     /**< Manufacturer. Will be passed to Device Information Service. */
 #define APP_ADV_INTERVAL                300                                     /**< The advertising interval (in units of 0.625 ms. This value corresponds to 187.5 ms). */
 
-#define APP_ADV_DURATION                18000                                   /**< The advertising duration (180 seconds) in units of 10 milliseconds. */
+#define APP_ADV_DURATION                3000                                    /**< The advertising duration (180 seconds) in units of 10 milliseconds. */
 #define APP_BLE_OBSERVER_PRIO           3                                       /**< Application's BLE observer priority. You shouldn't need to modify this value. */
 #define APP_BLE_CONN_CFG_TAG            1                                       /**< A tag identifying the SoftDevice BLE configuration. */
 
@@ -148,7 +149,10 @@ static void wlm_timer_timeout_handler(void * p_context) {
 
     ret_code_t err_code;
 
+    //intialize the sensor
+    wlm_sensor_init();
     water_level = wlm_sensor_get_reading();
+    wlm_sensor_uninit();
     err_code = water_level_update(&m_walter_service, &water_level);
 
     if ((err_code != NRF_SUCCESS) &&
@@ -634,9 +638,7 @@ static void power_management_init(void)
  */
 static void idle_state_handle(void)
 {
-    NRF_LOG_FLUSH();
-
-    nrf_pwr_mgmt_run();
+        nrf_pwr_mgmt_run();
 }
 
 
@@ -676,9 +678,6 @@ int main(void)
     advertising_init();
     conn_params_init();
     peer_manager_init();
-
-    //intialize the sensor
-    wlm_sensor_init();
 
     // Start execution.
     NRF_LOG_INFO("Walter Started.");

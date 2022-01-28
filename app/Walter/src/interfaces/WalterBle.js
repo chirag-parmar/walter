@@ -74,6 +74,11 @@ class WalterBle {
 
         this.manager.connectToDevice(peripheral.id).then((device) => {
             console.log("Connected to " + device.name)
+            
+            //on new connection remove old listeners that might have been dangling
+            if (this.notifySubscription) this.notifySubscription.remove()
+            this.notifySubscription = null
+
             DeviceEventEmitter.emit('WalterBleEvent', {event: "connected", value: null})
         }).catch((err) => console.log(err))
     }

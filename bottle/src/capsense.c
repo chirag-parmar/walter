@@ -36,6 +36,12 @@ void initialize_sensor(uint32_t send_pin, uint32_t receive_pin, sensor_ctx_t *se
 
 }
 
+void uninitialize_sensor(sensor_ctx_t *sensor_ctx) {
+	//configure the pins
+	nrf_gpio_cfg_default(sensor_ctx->send_pin);						  // sendpin to OUTPUT
+	nrf_gpio_cfg_default(sensor_ctx->receive_pin); // receivePin to INPUT
+}
+
 void set_timeout_millis(unsigned long timeout_millis, sensor_ctx_t *sensor_ctx) {
 	sensor_ctx->timeout_millis = (timeout_millis * (float)sensor_ctx->loop_timing_factor * (float)F_CPU) / 16000000;  // floats to deal with large numbers
 }

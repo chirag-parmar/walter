@@ -13,5 +13,6 @@ typedef struct SENSOR_CTX {
 long get_sensor_reading(uint8_t samples, sensor_ctx_t *sensor_ctx);
 void set_timeout_millis(unsigned long timeout_millis, sensor_ctx_t *sensor_ctx);
 void initialize_sensor(uint32_t send_pin, uint32_t receive_pin, sensor_ctx_t *sensor_ctx);
+void uninitialize_sensor(sensor_ctx_t *sensor_ctx);
 
 #endif

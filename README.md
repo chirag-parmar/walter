@@ -27,8 +27,8 @@ make flash
 ```
 
 ### TODO:
-* [ ] [IMPORTANT] Debug NRF52840 - doesn't stop advertising at all
-* [ ] [IMPORTANT] initialize GPIO only while reading the sensor.
+* [x] [IMPORTANT] Debug NRF52840 - doesn't stop advertising at all
+* [x] [IMPORTANT] initialize GPIO only while reading the sensor.
 * [x] [IMPORTANT] Debug app: after refresh or after close and restart of app BLE shows connected but not re4ading notifications - most probably it is the BleManager object that has gone out of scope.
 * [ ] README Documentation
   * [ ] NRF softdevice and flashing instructions without debugger and with debugger 

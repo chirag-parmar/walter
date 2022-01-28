@@ -27,3 +27,7 @@ uint32_t wlm_sensor_get_reading(void) {
     long sensor_value = get_sensor_reading(30, &sensor_ctx);
     return (uint32_t) sensor_value;
 }
+
+void wlm_sensor_uninit(void) {
+    uninitialize_sensor(&sensor_ctx);                                          
+}
